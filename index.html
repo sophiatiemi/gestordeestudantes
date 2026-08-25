@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Câmera Jovi</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <main id="camera-screen">
+    <video id="preview" autoplay playsinline muted></video>
+
+    <div id="flash-overlay"></div>
+
+    <div class="top-bar">
+      <button class="icon-btn deco" aria-label="Flash" tabindex="-1">⚡</button>
+      <button class="icon-btn deco pill" aria-label="HDR" tabindex="-1">HDR</button>
+      <button class="icon-btn deco" aria-label="Timer" tabindex="-1">⏱</button>
+      <button class="icon-btn deco" aria-label="Configurações" tabindex="-1">⚙</button>
+    </div>
+
+    <div class="zoom-bar deco">
+      <span>.5</span>
+      <span class="zoom-active">1x</span>
+      <span>2</span>
+      <span>3</span>
+    </div>
+
+    <div class="mode-tabs deco">
+      <span>VÍDEO</span>
+      <span class="active">FOTO</span>
+      <span>RETRATO</span>
+      <span>MAIS</span>
+    </div>
+
+    <div class="bottom-bar">
+      <button id="thumbnail" class="thumb-btn" aria-label="Última foto" disabled></button>
+      <button id="shutter" class="shutter-btn" aria-label="Tirar foto"></button>
+      <button class="icon-btn deco flip-btn" aria-label="Trocar câmera" tabindex="-1">⟳</button>
+    </div>
+
+    <div id="permission-overlay">
+      <div class="permission-card">
+        <p id="permission-text">Esta demonstração usa a câmera do seu celular.<br />Nenhuma foto é salva ou enviada — tudo acontece só no seu navegador.</p>
+        <button id="start-camera">Ativar câmera</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="review-screen" class="hidden">
+    <img id="review-photo" alt="Foto capturada" />
+    <button id="close-review" aria-label="Voltar para a câmera">✕</button>
+  </div>
+
+  <canvas id="capture-canvas" class="hidden"></canvas>
+
+  <script src="camera.js"></script>
+</body>
+</html>
