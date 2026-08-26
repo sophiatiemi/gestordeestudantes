@@ -22,8 +22,8 @@
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: 'environment' },
-          width: { ideal: 4096 },
-          height: { ideal: 2160 },
+          width: { ideal: 7680 },
+          height: { ideal: 4320 },
         },
         audio: false,
       });
@@ -50,7 +50,19 @@
 
     if (imageCapture) {
       try {
-        const blob = await imageCapture.takePhoto();
+        let photoSettings = undefined;
+        try {
+          const caps = await imageCapture.getPhotoCapabilities();
+          if (caps.imageWidth && caps.imageHeight) {
+            photoSettings = {
+              imageWidth: caps.imageWidth.max,
+              imageHeight: caps.imageHeight.max,
+            };
+          }
+        } catch (e) {
+          // getPhotoCapabilities() não suportado neste navegador — segue sem imageWidth/imageHeight explícitos.
+        }
+        const blob = await imageCapture.takePhoto(photoSettings);
         showPhoto(blob);
         return;
       } catch (err) {
@@ -69,7 +81,7 @@
 
     captureCanvas.toBlob((blob) => {
       if (blob) showPhoto(blob);
-    }, 'image/jpeg', 0.95);
+    }, 'image/jpeg', 1);
   }
 
   function showPhoto(blob) {
