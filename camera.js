@@ -15,15 +15,29 @@
   const captureCanvas = document.getElementById('capture-canvas');
 
   let currentPhotoUrl = null;
+  let imageCapture = null;
 
   async function startCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' } },
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 4096 },
+          height: { ideal: 2160 },
+        },
         audio: false,
       });
       preview.srcObject = stream;
       permissionOverlay.classList.add('hidden');
+
+      const [track] = stream.getVideoTracks();
+      if (track && 'ImageCapture' in window) {
+        try {
+          imageCapture = new ImageCapture(track);
+        } catch (e) {
+          imageCapture = null;
+        }
+      }
     } catch (err) {
       permissionText.textContent =
         'Não foi possível acessar a câmera. Verifique se você permitiu o acesso e se está usando HTTPS, depois tente novamente.';
@@ -31,7 +45,19 @@
     }
   }
 
-  function takePhoto() {
+  async function takePhoto() {
+    triggerFlash();
+
+    if (imageCapture) {
+      try {
+        const blob = await imageCapture.takePhoto();
+        showPhoto(blob);
+        return;
+      } catch (err) {
+        // Sensor não suportou takePhoto() nesta situação — cai para o método de vídeo abaixo.
+      }
+    }
+
     const width = preview.videoWidth;
     const height = preview.videoHeight;
     if (!width || !height) return;
@@ -42,16 +68,17 @@
     ctx.drawImage(preview, 0, 0, width, height);
 
     captureCanvas.toBlob((blob) => {
-      if (!blob) return;
-      discardPhoto();
-      currentPhotoUrl = URL.createObjectURL(blob);
-      reviewPhoto.src = currentPhotoUrl;
-      thumbnail.style.backgroundImage = `url(${currentPhotoUrl})`;
-      thumbnail.disabled = false;
-      openReview();
-    }, 'image/jpeg', 0.92);
+      if (blob) showPhoto(blob);
+    }, 'image/jpeg', 0.95);
+  }
 
-    triggerFlash();
+  function showPhoto(blob) {
+    discardPhoto();
+    currentPhotoUrl = URL.createObjectURL(blob);
+    reviewPhoto.src = currentPhotoUrl;
+    thumbnail.style.backgroundImage = `url(${currentPhotoUrl})`;
+    thumbnail.disabled = false;
+    openReview();
   }
 
   function triggerFlash() {
