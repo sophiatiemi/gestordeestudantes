@@ -36,6 +36,7 @@ button {
 #camera-screen {
   position: relative;
   width: 100vw;
+  height: 100vh;
   height: 100dvh;
   overflow: hidden;
   background: #000;
@@ -428,16 +429,6 @@ button {
   object-fit: cover;
 }
 
-#close-review {
-  position: absolute;
-  top: calc(var(--safe-top) + 16px);
-  left: 16px;
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+#review-screen .top-bar #close-review {
+  color: #fff;
 }
