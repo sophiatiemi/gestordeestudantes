@@ -26,11 +26,11 @@
 
   const STYLES = [
     { id: 'padrao', label: 'Padrão', filter: 'none', gradient: 'linear-gradient(135deg,#3a3a3a,#161616)' },
-    { id: 'festa', label: 'Festa', filter: 'contrast(1.15) saturate(1.6) brightness(1.05) hue-rotate(-8deg)', gradient: 'linear-gradient(135deg,#ff3ec8,#7b2ff7)' },
-    { id: 'revista', label: 'Revista', filter: 'grayscale(1) contrast(1.25) brightness(1.05)', gradient: 'linear-gradient(135deg,#d8d8d8,#4a4a4a)' },
+    { id: 'festa', label: 'Festa', filter: 'contrast(1.3) saturate(1.25) brightness(0.82)', image: 'styles/festa.jpg' },
+    { id: 'revista', label: 'Revista', filter: 'grayscale(1) contrast(1.05) brightness(1.08)', image: 'styles/revista.jpg' },
     { id: 'show', label: 'Show', filter: 'contrast(1.2) saturate(1.3) brightness(0.9) sepia(0.15)', gradient: 'linear-gradient(135deg,#ffcf5c,#e8532e)' },
-    { id: 'cidade', label: 'Cidade', filter: 'contrast(1.15) saturate(0.7) brightness(1.02)', gradient: 'linear-gradient(135deg,#7d97ad,#33414d)' },
-    { id: 'comida', label: 'Comida', filter: 'saturate(1.5) contrast(1.1) brightness(1.05) sepia(0.08)', gradient: 'linear-gradient(135deg,#ff8a3d,#c62828)' },
+    { id: 'cidade', label: 'Cidade', filter: 'contrast(0.95) saturate(0.85) brightness(1.1) sepia(0.15)', image: 'styles/cidade.jpg' },
+    { id: 'comida', label: 'Comida', filter: 'saturate(1.4) contrast(1.15) brightness(0.92) sepia(0.1)', image: 'styles/comida.jpg' },
   ];
 
   let currentStream = null;
@@ -245,8 +245,11 @@
     list.forEach((style) => {
       const tile = document.createElement('button');
       tile.className = 'style-tile' + (style.id === activeStyleId ? ' active' : '');
+      const swatchStyle = style.image
+        ? `background-image:url(${style.image}); filter:${style.filter}`
+        : `background:${style.gradient}; filter:${style.filter}`;
       tile.innerHTML =
-        `<span class="swatch" style="background:${style.gradient}; filter:${style.filter}"></span>` +
+        `<span class="swatch" style="${swatchStyle}"></span>` +
         `<span>${style.label}</span>`;
       tile.addEventListener('click', () => selectStyle(style.id));
       styleStrip.appendChild(tile);
