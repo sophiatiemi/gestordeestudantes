@@ -14,7 +14,7 @@
     <div id="flash-overlay"></div>
 
     <div class="top-bar">
-      <button class="icon-btn deco" aria-label="Flash" tabindex="-1">⚡</button>
+      <button id="flash-toggle" class="icon-btn" aria-label="Flash" aria-pressed="false">⚡</button>
       <button class="icon-btn deco pill" aria-label="HDR" tabindex="-1">HDR</button>
       <button class="icon-btn deco" aria-label="Timer" tabindex="-1">⏱</button>
       <button class="icon-btn deco" aria-label="Configurações" tabindex="-1">⚙</button>
@@ -27,18 +27,36 @@
       <span>3</span>
     </div>
 
-    <div class="mode-tabs deco">
-      <span>VÍDEO</span>
-      <span class="active">FOTO</span>
-      <span>RETRATO</span>
-      <span>MAIS</span>
+    <!-- Painel de estilos: fica escondido abaixo da tela e sobe ao arrastar a alça "Novo Estilo" -->
+    <div id="style-panel">
+      <div class="style-panel-tabs">
+        <button class="style-tab active" data-tab="prontos">Estilos prontos</button>
+        <button class="style-tab" data-tab="favoritos">Favoritos</button>
+        <button class="style-tab" data-tab="recentes">Recentes</button>
+        <button id="close-style-panel" aria-label="Fechar estilos">✕</button>
+      </div>
+      <div id="style-strip" class="style-strip"></div>
+    </div>
+
+    <div class="mode-tabs-wrap">
+      <div class="mode-tabs">
+        <span data-mode="video">VÍDEO</span>
+        <span data-mode="foto" class="active">FOTO</span>
+        <span data-mode="estilos">ESTILOS</span>
+        <span data-mode="mais">MAIS</span>
+      </div>
     </div>
 
     <div class="bottom-bar">
       <button id="thumbnail" class="thumb-btn" aria-label="Última foto" disabled></button>
       <button id="shutter" class="shutter-btn" aria-label="Tirar foto"></button>
-      <button class="icon-btn deco flip-btn" aria-label="Trocar câmera" tabindex="-1">⟳</button>
+      <button id="flip-camera" class="icon-btn flip-btn" aria-label="Trocar câmera">⟳</button>
     </div>
+
+    <button id="style-handle" aria-label="Arraste para ver os estilos">
+      <span class="chevron">⌃</span>
+      <span>Novo Estilo</span>
+    </button>
 
     <div id="permission-overlay">
       <div class="permission-card">
