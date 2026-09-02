@@ -71,14 +71,48 @@ button {
 
 .top-bar {
   position: absolute;
-  top: calc(var(--safe-top) + 14px);
+  top: 0;
   left: 0;
   right: 0;
+  height: calc(var(--safe-top) + 58px);
+  padding: var(--safe-top) 18px 0;
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   z-index: 10;
-  padding: 0 8px;
+  background: #000;
+}
+
+.top-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.top-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-label {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  flex-shrink: 0;
+}
+
+#flash-toggle[aria-pressed="true"] {
+  color: var(--accent);
+}
+
+#flash-toggle[aria-pressed="true"] .off-slash {
+  display: none;
 }
 
 .icon-btn {
@@ -91,19 +125,6 @@ button {
   font-size: 18px;
   background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(6px);
-}
-
-.icon-btn.pill {
-  width: auto;
-  padding: 0 12px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-#flash-toggle[aria-pressed="true"] {
-  background: var(--accent);
-  color: #1a1a1a;
 }
 
 /* ---------- Barra de zoom (decorativa) ---------- */
