@@ -55,6 +55,8 @@
       </button>
     </div>
 
+    <div id="bottom-scrim"></div>
+
     <div class="zoom-bar deco">
       <span>.5</span>
       <span class="zoom-active">1x</span>
@@ -62,7 +64,7 @@
       <span>3</span>
     </div>
 
-    <!-- Painel de estilos: fica escondido abaixo da tela e sobe ao arrastar a alça "Novo Estilo" -->
+    <!-- Painel de estilos: fica escondido abaixo da tela e sobe ao tocar na aba "Estilos" -->
     <div id="style-panel">
       <div class="style-panel-tabs">
         <button class="style-tab active" data-tab="prontos">Estilos prontos</button>
@@ -88,10 +90,55 @@
       <button id="flip-camera" class="icon-btn flip-btn" aria-label="Trocar câmera">⟳</button>
     </div>
 
-    <button id="style-handle" aria-label="Arraste para ver os estilos">
+    <button id="style-handle" aria-label="Arraste para falar com a Jô">
       <span class="chevron">⌃</span>
-      <span>Novo Estilo</span>
+      <span>Jô</span>
     </button>
+
+    <!-- Tela da Jô: sobe por cima da câmera ao arrastar/tocar na alça "Jô" -->
+    <div id="jo-panel">
+      <div class="jo-topbar">
+        <button class="jo-icon-btn" aria-label="Menu" tabindex="-1">☰</button>
+        <button id="jo-collapse" class="jo-collapse" aria-label="Voltar para a câmera">⌄</button>
+        <div class="jo-right-cluster">
+          <button class="jo-icon-btn jo-edit-btn" aria-label="Editar" tabindex="-1">✏️</button>
+          <button id="jo-test" class="jo-test-btn" aria-label="Testar na câmera">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 8h2l1.5-2h9L18 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" />
+              <circle cx="12" cy="13.5" r="3.2" />
+            </svg>
+            Testar
+          </button>
+        </div>
+      </div>
+
+      <div id="jo-body">
+        <div id="jo-idle">
+          <div class="jo-logo" id="jo-logo-idle">
+            <svg viewBox="0 0 140 140">
+              <path class="jo-j" d="M46 46 L46 88 Q46 108 28 108 Q12 108 8 92" fill="none" stroke="#2b3fe0" stroke-width="15" stroke-linecap="round" />
+              <path class="jo-hat" d="M84 44 L104 26 L124 44 L108 40 L100 52 Z" fill="#2b3fe0" />
+              <circle class="jo-o" cx="104" cy="76" r="30" fill="#2b3fe0" />
+              <ellipse class="jo-eye" cx="104" cy="76" rx="10" ry="8" fill="#f7f7f7" />
+            </svg>
+          </div>
+          <p>Qual a próxima foto?</p>
+        </div>
+
+        <div id="jo-messages"></div>
+      </div>
+
+      <form id="jo-input-bar">
+        <button type="button" class="jo-attach" aria-label="Anexar" tabindex="-1">+</button>
+        <input type="text" id="jo-input" placeholder="Qual a sua ideia?" autocomplete="off" />
+        <button type="button" class="jo-mic" aria-label="Voz" tabindex="-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="2" width="6" height="12" rx="3" />
+            <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+          </svg>
+        </button>
+      </form>
+    </div>
 
     <div id="permission-overlay">
       <div class="permission-card">

@@ -24,6 +24,20 @@
   const styleTabButtons = document.querySelectorAll('.style-tab');
   const modeTabButtons = document.querySelectorAll('.mode-tabs span');
 
+  const joPanel = document.getElementById('jo-panel');
+  const joCollapse = document.getElementById('jo-collapse');
+  const joTest = document.getElementById('jo-test');
+  const joInputForm = document.getElementById('jo-input-bar');
+  const joInput = document.getElementById('jo-input');
+  const joMessages = document.getElementById('jo-messages');
+
+  const JO_LOGO_SVG = `<svg viewBox="0 0 140 140">
+      <path class="jo-j" d="M46 46 L46 88 Q46 108 28 108 Q12 108 8 92" fill="none" stroke="#2b3fe0" stroke-width="15" stroke-linecap="round" />
+      <path class="jo-hat" d="M84 44 L104 26 L124 44 L108 40 L100 52 Z" fill="#2b3fe0" />
+      <circle class="jo-o" cx="104" cy="76" r="30" fill="#2b3fe0" />
+      <ellipse class="jo-eye" cx="104" cy="76" rx="10" ry="8" fill="#f7f7f7" />
+    </svg>`;
+
   const STYLES = [
     { id: 'padrao', label: 'Padrão', filter: 'none', gradient: 'linear-gradient(135deg,#3a3a3a,#161616)' },
     { id: 'festa', label: 'Festa', filter: 'contrast(1.3) saturate(1.25) brightness(0.82)', image: 'styles/festa.jpg' },
@@ -287,7 +301,59 @@
     });
   }
 
-  // Arraste na alça "Novo Estilo": arrastar pra cima abre, pra baixo fecha, tocar alterna.
+  // ---------- Tela da Jô ----------
+
+  function openJoPanel() {
+    cameraScreen.classList.add('jo-open');
+  }
+
+  function closeJoPanel() {
+    cameraScreen.classList.remove('jo-open');
+  }
+
+  function toggleJoPanel() {
+    if (cameraScreen.classList.contains('jo-open')) {
+      closeJoPanel();
+    } else {
+      openJoPanel();
+    }
+  }
+
+  function sendJoMessage(text) {
+    joPanel.classList.add('has-sent');
+
+    const userMsg = document.createElement('div');
+    userMsg.className = 'jo-msg-user';
+    const thumbHtml = currentPhotoUrl ? `<img class="jo-thumb" src="${currentPhotoUrl}" alt="Foto anexada" />` : '';
+    userMsg.innerHTML = `${thumbHtml}<p class="jo-bubble"></p>`;
+    userMsg.querySelector('.jo-bubble').textContent = text;
+    joMessages.appendChild(userMsg);
+
+    const status = document.createElement('div');
+    status.className = 'jo-msg-status';
+    status.innerHTML = `<span class="jo-logo loading">${JO_LOGO_SVG}</span><span class="jo-status-text">Capturando...</span>`;
+    joMessages.appendChild(status);
+
+    joMessages.scrollIntoView({ block: 'end' });
+
+    setTimeout(() => {
+      status.querySelector('.jo-logo').classList.remove('loading');
+      status.querySelector('.jo-status-text').textContent = 'Pronto! Toque em "Testar" para ver na câmera.';
+    }, 2300);
+  }
+
+  joInputForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const text = joInput.value.trim();
+    if (!text) return;
+    sendJoMessage(text);
+    joInput.value = '';
+  });
+
+  joCollapse.addEventListener('click', closeJoPanel);
+  joTest.addEventListener('click', closeJoPanel);
+
+  // Arraste na alça "Jô": arrastar pra cima abre, pra baixo fecha, tocar alterna.
   let dragStartY = null;
   let dragMoved = false;
 
@@ -306,17 +372,17 @@
     const delta = dragStartY - e.clientY;
     if (Math.abs(delta) > 10) dragMoved = true;
     if (delta > 30) {
-      openPanel();
+      openJoPanel();
       dragStartY = null;
     } else if (delta < -30) {
-      closePanel();
+      closeJoPanel();
       dragStartY = null;
     }
   });
 
   styleHandle.addEventListener('pointerup', () => {
     if (dragStartY !== null && !dragMoved) {
-      togglePanel();
+      toggleJoPanel();
     }
     dragStartY = null;
     dragMoved = false;
