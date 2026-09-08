@@ -32,11 +32,22 @@
   const joInput = document.getElementById('jo-input');
   const joMessages = document.getElementById('jo-messages');
 
-  const JO_LOGO_SVG = `<svg viewBox="0 0 140 140">
-      <path class="jo-j" d="M46 46 L46 88 Q46 108 28 108 Q12 108 8 92" fill="none" stroke="#2b3fe0" stroke-width="15" stroke-linecap="round" />
-      <path class="jo-hat" d="M84 44 L104 26 L124 44 L108 40 L100 52 Z" fill="#2b3fe0" />
-      <circle class="jo-o" cx="104" cy="76" r="30" fill="#2b3fe0" />
-      <ellipse class="jo-eye" cx="104" cy="76" rx="10" ry="8" fill="#f7f7f7" />
+  const JO_LOGO_SVG = `<svg viewBox="0 0 200 120">
+      <path class="jo2-hook" d="M100 50 L100 85 Q100 105 82 105 Q45 105 25 82" fill="none" stroke="#1c1c1e" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" />
+      <path class="jo2-head" d="M70 65 A55 55 0 0 1 125 10 L135 10 A55 55 0 0 1 190 65 L190 92 A18 18 0 0 1 172 110 L88 110 A18 18 0 0 1 70 92 Z" fill="#1c1c1e" />
+      <clipPath id="jo2-visor-clip-status">
+        <path d="M100 45 Q132 20 165 45 Q132 58 100 45 Z" />
+      </clipPath>
+      <path d="M100 45 Q132 20 165 45 Q132 58 100 45 Z" fill="#f7f7f8" />
+      <g clip-path="url(#jo2-visor-clip-status)">
+        <g class="jo2-pupil">
+          <path d="M112 28 L152 28 Q158 28 158 42 A23 18 0 0 1 106 42 Q106 28 112 28 Z" fill="#1c1c1e" />
+          <rect x="116" y="34" width="13" height="9" rx="4.5" fill="#f7f7f8" />
+        </g>
+      </g>
+      <rect x="94" y="95" width="23" height="11" rx="5.5" fill="#1c1c1e" />
+      <rect x="124" y="95" width="23" height="11" rx="5.5" fill="#1c1c1e" />
+      <rect x="153" y="95" width="23" height="11" rx="5.5" fill="#1c1c1e" />
     </svg>`;
 
   const STYLES = [
