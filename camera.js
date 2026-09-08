@@ -371,6 +371,24 @@
   }
 
   function sendJoMessage(text) {
+    const idleLogoEl = document.getElementById('jo-logo-idle');
+    const startRect = idleLogoEl ? idleLogoEl.getBoundingClientRect() : null;
+
+    let flyer = null;
+    if (startRect) {
+      flyer = idleLogoEl.cloneNode(true);
+      flyer.removeAttribute('id');
+      flyer.classList.add('jo-logo-flyer');
+      flyer.style.position = 'fixed';
+      flyer.style.left = `${startRect.left}px`;
+      flyer.style.top = `${startRect.top}px`;
+      flyer.style.width = `${startRect.width}px`;
+      flyer.style.height = `${startRect.height}px`;
+      flyer.style.margin = '0';
+      document.body.appendChild(flyer);
+      playJoVideo(flyer);
+    }
+
     joPanel.classList.add('has-sent');
 
     const userMsg = document.createElement('div');
@@ -382,16 +400,36 @@
 
     const status = document.createElement('div');
     status.className = 'jo-msg-status';
-    status.innerHTML = `<span class="jo-logo loading">${JO_LOGO_SVG}</span><span class="jo-status-text">Capturando...</span>`;
+    status.innerHTML = `<span class="jo-logo loading" style="opacity:0">${JO_LOGO_SVG}</span><span class="jo-status-text looping">Analisando sua mensagem</span>`;
     joMessages.appendChild(status);
-    playJoVideo(status.querySelector('.jo-logo'));
-
     joMessages.scrollIntoView({ block: 'end' });
 
-    setTimeout(() => {
-      status.querySelector('.jo-logo').classList.remove('loading');
-      status.querySelector('.jo-status-text').textContent = 'Pronto! Toque em "Testar" para ver na câmera.';
-    }, 2300);
+    const statusLogo = status.querySelector('.jo-logo');
+
+    if (flyer && statusLogo) {
+      const endRect = statusLogo.getBoundingClientRect();
+      const scaleX = endRect.width / startRect.width;
+      const scaleY = endRect.height / startRect.height;
+      const dx = endRect.left - startRect.left;
+      const dy = endRect.top - startRect.top;
+
+      flyer.style.transformOrigin = 'top left';
+      flyer.style.transition = 'transform 550ms cubic-bezier(0.34, 1.1, 0.4, 1)';
+      // Força o navegador a aplicar o estado inicial antes de animar.
+      flyer.getBoundingClientRect();
+      requestAnimationFrame(() => {
+        flyer.style.transform = `translate(${dx}px, ${dy}px) scale(${scaleX}, ${scaleY})`;
+      });
+
+      setTimeout(() => {
+        statusLogo.style.opacity = '1';
+        playJoVideo(statusLogo);
+        flyer.remove();
+      }, 560);
+    } else if (statusLogo) {
+      statusLogo.style.opacity = '1';
+      playJoVideo(statusLogo);
+    }
   }
 
   joInputForm.addEventListener('submit', (e) => {
