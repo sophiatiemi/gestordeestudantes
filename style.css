@@ -545,8 +545,8 @@ button {
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #e2e2e6;
-  color: #b5b5bc;
+  border: 1px solid #d6d9ff;
+  color: #2b3fe0;
   font-size: 13px;
   font-weight: 600;
   padding: 7px 14px 7px 10px;
@@ -556,11 +556,6 @@ button {
 .jo-test-btn svg {
   width: 16px;
   height: 16px;
-}
-
-#jo-panel.has-sent .jo-test-btn {
-  color: #2b3fe0;
-  border-color: #d6d9ff;
 }
 
 #jo-body {
@@ -686,4 +681,21 @@ button {
 #jo-input-bar .jo-mic svg {
   width: 19px;
   height: 19px;
+}
+
+#jo-input-bar .jo-send {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #2b3fe0;
+  color: #fff;
+}
+
+#jo-input-bar .jo-send svg {
+  width: 16px;
+  height: 16px;
 }
