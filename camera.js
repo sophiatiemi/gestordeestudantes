@@ -23,6 +23,7 @@
   const styleStrip = document.getElementById('style-strip');
   const styleTabButtons = document.querySelectorAll('.style-tab');
   const modeTabButtons = document.querySelectorAll('.mode-tabs span');
+  const zoomButtons = document.querySelectorAll('.zoom-bar button');
 
   const joPanel = document.getElementById('jo-panel');
   const joCollapse = document.getElementById('jo-collapse');
@@ -54,6 +55,9 @@
   let currentFacing = 'environment';
   let flashOn = false;
 
+  let zoomLevel = 1;
+  let zoomIsHardware = false;
+
   let activeStyleId = 'padrao';
   let recentStyleIds = [];
   let currentPanelTab = 'prontos';
@@ -81,7 +85,6 @@
     currentStream = stream;
     currentFacing = facing;
     preview.srcObject = stream;
-    preview.classList.toggle('mirrored', facing === 'user');
 
     currentTrack = stream.getVideoTracks()[0];
 
@@ -101,6 +104,36 @@
     } catch (e) {
       torchSupported = false;
     }
+
+    await applyZoom(zoomLevel);
+  }
+
+  function updatePreviewTransform() {
+    const mirror = currentFacing === 'user' ? -1 : 1;
+    const cssScale = zoomIsHardware ? 1 : zoomLevel;
+    preview.style.transform = `scaleX(${mirror}) scale(${cssScale})`;
+  }
+
+  async function applyZoom(value) {
+    zoomLevel = value;
+    zoomIsHardware = false;
+
+    if (currentTrack) {
+      try {
+        const caps = currentTrack.getCapabilities ? currentTrack.getCapabilities() : {};
+        if (caps.zoom && value >= caps.zoom.min && value <= caps.zoom.max) {
+          await currentTrack.applyConstraints({ advanced: [{ zoom: value }] });
+          zoomIsHardware = true;
+        }
+      } catch (e) {
+        zoomIsHardware = false;
+      }
+    }
+
+    zoomButtons.forEach((btn) => {
+      btn.classList.toggle('active', Number(btn.dataset.zoom) === value);
+    });
+    updatePreviewTransform();
   }
 
   async function startCamera() {
@@ -132,6 +165,7 @@
   async function takePhoto() {
     const useStyle = activeStyleId !== 'padrao';
     const useMirror = currentFacing === 'user';
+    const useCssZoom = !zoomIsHardware && zoomLevel !== 1;
     let torchApplied = false;
 
     if (flashOn) {
@@ -147,7 +181,7 @@
     }
 
     try {
-      if (!useStyle && !useMirror && imageCapture) {
+      if (!useStyle && !useMirror && !useCssZoom && imageCapture) {
         try {
           let photoSettings;
           try {
@@ -166,7 +200,7 @@
         }
       }
 
-      captureFromCanvas(useMirror, useStyle);
+      captureFromCanvas(useMirror, useStyle, useCssZoom);
     } finally {
       if (torchApplied) {
         try {
@@ -178,7 +212,7 @@
     }
   }
 
-  function captureFromCanvas(mirror, useStyle) {
+  function captureFromCanvas(mirror, useStyle, useCssZoom) {
     const width = preview.videoWidth;
     const height = preview.videoHeight;
     if (!width || !height) return;
@@ -191,6 +225,11 @@
     if (mirror) {
       ctx.translate(width, 0);
       ctx.scale(-1, 1);
+    }
+    if (useCssZoom) {
+      ctx.translate(width / 2, height / 2);
+      ctx.scale(zoomLevel, zoomLevel);
+      ctx.translate(-width / 2, -height / 2);
     }
     ctx.filter = useStyle ? findStyle(activeStyleId).filter : 'none';
     ctx.drawImage(preview, 0, 0, width, height);
@@ -414,6 +453,10 @@
         closePanel();
       }
     });
+  });
+
+  zoomButtons.forEach((btn) => {
+    btn.addEventListener('click', () => applyZoom(Number(btn.dataset.zoom)));
   });
 
   // ---------- Eventos gerais ----------

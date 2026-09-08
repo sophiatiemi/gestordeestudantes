@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=5" />
+  <link rel="stylesheet" href="style.css?v=6" />
 </head>
 <body>
 
@@ -57,11 +57,12 @@
 
     <div id="bottom-scrim"></div>
 
-    <div class="zoom-bar deco">
-      <span>.5</span>
-      <span class="zoom-active">1x</span>
-      <span>2</span>
-      <span>3</span>
+    <div class="zoom-bar-wrap">
+      <div class="zoom-bar">
+        <button data-zoom="0.5">.5</button>
+        <button data-zoom="1" class="active">1x</button>
+        <button data-zoom="1.5">1.5</button>
+      </div>
     </div>
 
     <!-- Painel de estilos: fica escondido abaixo da tela e sobe ao tocar na aba "Estilos" -->
@@ -186,6 +187,6 @@
 
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=5"></script>
+  <script src="camera.js?v=6"></script>
 </body>
 </html>

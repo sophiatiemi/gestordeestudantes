@@ -50,10 +50,6 @@ button {
   object-fit: cover;
 }
 
-#preview.mirrored {
-  transform: scaleX(-1);
-}
-
 #flash-overlay {
   position: absolute;
   inset: 0;
@@ -140,31 +136,50 @@ button {
   z-index: 9;
 }
 
-/* ---------- Barra de zoom (decorativa) ---------- */
+/* ---------- Barra de zoom ---------- */
 
-.zoom-bar {
+.zoom-bar-wrap {
   position: absolute;
   bottom: 190px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  z-index: 10;
   display: flex;
-  gap: 18px;
+  justify-content: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.zoom-bar-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.zoom-bar {
+  display: flex;
+  gap: 6px;
   align-items: center;
   background: rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(6px);
   border-radius: 999px;
-  padding: 8px 16px;
+  padding: 6px;
+}
+
+.zoom-bar button {
   font-size: 13px;
+  font-weight: 600;
   color: rgba(255, 255, 255, 0.7);
-  z-index: 10;
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
 }
 
-.zoom-active {
-  color: var(--accent);
-  font-weight: 700;
+.zoom-bar button.active {
+  color: #1a1a1a;
+  background: var(--accent);
 }
 
-#camera-screen.panel-open .zoom-bar {
+#camera-screen.panel-open .zoom-bar-wrap {
   opacity: 0;
   pointer-events: none;
 }
