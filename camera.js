@@ -32,7 +32,10 @@
   const joInput = document.getElementById('jo-input');
   const joMessages = document.getElementById('jo-messages');
 
-  const JO_LOGO_SVG = `<video class="jo-logo-video" src="media/jo-loading.mp4" poster="media/jo-poster.jpg" autoplay loop muted playsinline></video>`;
+  const JO_LOGO_SVG = `<video class="jo-logo-video" poster="media/jo-poster.jpg" autoplay loop muted playsinline>
+      <source src="media/jo-loading.webm" type="video/webm" />
+      <source src="media/jo-loading.mp4" type="video/mp4" />
+    </video>`;
 
   const STYLES = [
     { id: 'padrao', label: 'Padrão', filter: 'none', gradient: 'linear-gradient(135deg,#3a3a3a,#161616)' },
@@ -337,8 +340,22 @@
 
   // ---------- Tela da Jô ----------
 
+  function playJoVideo(el) {
+    if (!el) return;
+    const video = el.tagName === 'VIDEO' ? el : el.querySelector('video');
+    if (!video) return;
+    video.currentTime = 0;
+    const playPromise = video.play();
+    if (playPromise && playPromise.catch) {
+      playPromise.catch(() => {
+        // Autoplay recusado — tenta de novo na próxima interação do usuário.
+      });
+    }
+  }
+
   function openJoPanel() {
     cameraScreen.classList.add('jo-open');
+    playJoVideo(document.getElementById('jo-logo-idle'));
   }
 
   function closeJoPanel() {
@@ -367,6 +384,7 @@
     status.className = 'jo-msg-status';
     status.innerHTML = `<span class="jo-logo loading">${JO_LOGO_SVG}</span><span class="jo-status-text">Capturando...</span>`;
     joMessages.appendChild(status);
+    playJoVideo(status.querySelector('.jo-logo'));
 
     joMessages.scrollIntoView({ block: 'end' });
 
