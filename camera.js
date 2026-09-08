@@ -30,6 +30,7 @@
   const joTest = document.getElementById('jo-test');
   const joInputForm = document.getElementById('jo-input-bar');
   const joInput = document.getElementById('jo-input');
+  const joSendButton = document.getElementById('jo-send');
   const joMessages = document.getElementById('jo-messages');
 
   const JO_LOGO_SVG = `<video class="jo-logo-video" poster="media/jo-poster.jpg" autoplay loop muted playsinline>
@@ -432,13 +433,19 @@
     }
   }
 
-  joInputForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+  function handleJoSend() {
     const text = joInput.value.trim();
     if (!text) return;
     sendJoMessage(text);
     joInput.value = '';
+  }
+
+  joInputForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleJoSend();
   });
+
+  joSendButton.addEventListener('click', handleJoSend);
 
   joCollapse.addEventListener('click', closeJoPanel);
   joTest.addEventListener('click', closeJoPanel);
