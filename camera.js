@@ -42,7 +42,6 @@
     { id: 'padrao', label: 'Padrão', filter: 'none', gradient: 'linear-gradient(135deg,#3a3a3a,#161616)' },
     { id: 'festa', label: 'Festa', filter: 'contrast(1.3) saturate(1.25) brightness(0.82)', image: 'styles/festa.jpg' },
     { id: 'revista', label: 'Revista', filter: 'grayscale(1) contrast(1.05) brightness(1.08)', image: 'styles/revista.jpg' },
-    { id: 'show', label: 'Show', filter: 'contrast(1.2) saturate(1.3) brightness(0.9) sepia(0.15)', gradient: 'linear-gradient(135deg,#ffcf5c,#e8532e)' },
     { id: 'cidade', label: 'Cidade', filter: 'contrast(0.95) saturate(0.85) brightness(1.1) sepia(0.15)', image: 'styles/cidade.jpg' },
     { id: 'comida', label: 'Comida', filter: 'saturate(1.4) contrast(1.15) brightness(0.92) sepia(0.1)', image: 'styles/comida.jpg' },
   ];
