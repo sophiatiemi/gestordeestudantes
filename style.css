@@ -152,15 +152,15 @@ button {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 26px;
-  padding: 9px 22px;
+  gap: 20px;
+  padding: 7px 18px;
   border-radius: 999px;
   z-index: 10;
 }
 
 .top-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   padding: 0;
   flex-shrink: 0;
   display: flex;
@@ -182,14 +182,14 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
 .top-ev small {
-  font-size: 8px;
+  font-size: 7px;
   font-weight: 700;
   margin-top: 2px;
   letter-spacing: 0.5px;
@@ -584,7 +584,7 @@ button {
 .jo-top-btn::before {
   content: '';
   position: absolute;
-  left: -14px;
+  left: -11px;
   top: 2px;
   bottom: 2px;
   width: 1px;
@@ -592,8 +592,8 @@ button {
 }
 
 .jo-mark {
-  width: 46px;
-  height: 23px;
+  width: 40px;
+  height: 20px;
   display: block;
   filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.35));
 }
@@ -606,9 +606,9 @@ button {
   pointer-events: none;
 }
 
-.sparkle.s1 { width: 11px; height: 11px; top: -8px; left: -7px; }
-.sparkle.s2 { width: 8px; height: 8px; top: -7px; right: -8px; animation-delay: 0.6s; }
-.sparkle.s3 { width: 7px; height: 7px; bottom: -6px; right: -4px; animation-delay: 1.2s; }
+.sparkle.s1 { width: 9px; height: 9px; top: -7px; left: -6px; }
+.sparkle.s2 { width: 7px; height: 7px; top: -6px; right: -7px; animation-delay: 0.6s; }
+.sparkle.s3 { width: 6px; height: 6px; bottom: -5px; right: -4px; animation-delay: 1.2s; }
 
 @keyframes twinkle {
   0%, 100% { transform: scale(0.2) rotate(0deg); opacity: 0.1; }
@@ -693,8 +693,8 @@ button {
   left: auto;
   right: 14px;
   transform: none;
-  gap: 20px;
-  padding: 9px 18px;
+  gap: 16px;
+  padding: 7px 16px;
 }
 
 /* ---------- Tela da Jô ---------- */
