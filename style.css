@@ -232,7 +232,7 @@ button {
 
 .zoom-bar-wrap {
   position: absolute;
-  bottom: calc(var(--safe-bottom) + 232px);
+  bottom: calc(var(--safe-bottom) + 214px);
   left: 0;
   right: 0;
   z-index: 10;
@@ -289,7 +289,7 @@ button {
   position: absolute;
   left: 10px;
   right: 10px;
-  bottom: calc(var(--safe-bottom) + 216px);
+  bottom: calc(var(--safe-bottom) + 198px);
   z-index: 12;
   padding: 12px 16px 14px;
   border-radius: 24px;
@@ -390,7 +390,7 @@ button {
   position: absolute;
   left: 16px;
   right: 16px;
-  bottom: calc(var(--safe-bottom) + 216px);
+  bottom: calc(var(--safe-bottom) + 198px);
   z-index: 12;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -450,7 +450,7 @@ button {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(var(--safe-bottom) + 118px);
+  bottom: calc(var(--safe-bottom) + 100px);
   height: 84px;
   z-index: 10;
 }
@@ -505,7 +505,7 @@ button {
 
 .bottom-bar {
   position: absolute;
-  bottom: calc(var(--safe-bottom) + 40px);
+  bottom: calc(var(--safe-bottom) + 22px);
   left: 0;
   right: 0;
   display: flex;
@@ -570,39 +570,53 @@ button {
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
-/* ---------- Alça "Novo Estilo" ---------- */
+/* ---------- Logo da Jô (abre o chat) ---------- */
 
-#style-handle {
-  position: absolute;
-  bottom: calc(var(--safe-bottom) + 4px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 11;
+.jo-top-btn {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.75);
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  padding: 4px 14px;
-  touch-action: none;
+  padding: 0;
+  margin-left: 2px;
+  color: #fff;
 }
 
-#style-handle .chevron {
-  font-size: 13px;
-  line-height: 1;
-  transition: transform 200ms ease;
+.jo-top-btn::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 2px;
+  bottom: 2px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
-#camera-screen.jo-open #style-handle .chevron {
-  transform: rotate(180deg);
+.jo-mark {
+  width: 46px;
+  height: 23px;
+  display: block;
+  filter: drop-shadow(0 0 6px rgba(255, 204, 0, 0.35));
 }
 
-#camera-screen.jo-open #style-handle {
-  color: var(--accent);
+.sparkle {
+  position: absolute;
+  fill: var(--accent);
+  filter: drop-shadow(0 0 3px rgba(255, 204, 0, 0.9));
+  animation: twinkle 1.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sparkle.s1 { width: 11px; height: 11px; top: -8px; left: -7px; }
+.sparkle.s2 { width: 8px; height: 8px; top: -7px; right: -8px; animation-delay: 0.6s; }
+.sparkle.s3 { width: 7px; height: 7px; bottom: -6px; right: -4px; animation-delay: 1.2s; }
+
+@keyframes twinkle {
+  0%, 100% { transform: scale(0.2) rotate(0deg); opacity: 0.1; }
+  50% { transform: scale(1) rotate(45deg); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparkle { animation: none; opacity: 0.9; }
 }
 
 /* ---------- Overlay de permissão ---------- */

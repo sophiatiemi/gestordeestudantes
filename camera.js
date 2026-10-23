@@ -17,7 +17,7 @@
   const captureCanvas = document.getElementById('capture-canvas');
 
   const cameraScreen = document.getElementById('camera-screen');
-  const styleHandle = document.getElementById('style-handle');
+  const joOpenButton = document.getElementById('jo-open-btn');
   const stylePanel = document.getElementById('style-panel');
   const closeStylePanelButton = document.getElementById('close-style-panel');
   const styleStrip = document.getElementById('style-strip');
@@ -415,14 +415,6 @@
     cameraScreen.classList.remove('jo-open');
   }
 
-  function toggleJoPanel() {
-    if (cameraScreen.classList.contains('jo-open')) {
-      closeJoPanel();
-    } else {
-      openJoPanel();
-    }
-  }
-
   function sendJoMessage(text) {
     const idleLogoEl = document.getElementById('jo-logo-idle');
     const startRect = idleLogoEl ? idleLogoEl.getBoundingClientRect() : null;
@@ -502,44 +494,10 @@
   joCollapse.addEventListener('click', closeJoPanel);
   joTest.addEventListener('click', closeJoPanel);
 
-  // Arraste na alça "Jô": arrastar pra cima abre, pra baixo fecha, tocar alterna.
-  let dragStartY = null;
-  let dragMoved = false;
-
-  styleHandle.addEventListener('pointerdown', (e) => {
-    dragStartY = e.clientY;
-    dragMoved = false;
-    try {
-      styleHandle.setPointerCapture(e.pointerId);
-    } catch (err) {
-      // ignora
-    }
-  });
-
-  styleHandle.addEventListener('pointermove', (e) => {
-    if (dragStartY === null) return;
-    const delta = dragStartY - e.clientY;
-    if (Math.abs(delta) > 10) dragMoved = true;
-    if (delta > 30) {
-      openJoPanel();
-      dragStartY = null;
-    } else if (delta < -30) {
-      closeJoPanel();
-      dragStartY = null;
-    }
-  });
-
-  styleHandle.addEventListener('pointerup', () => {
-    if (dragStartY !== null && !dragMoved) {
-      toggleJoPanel();
-    }
-    dragStartY = null;
-    dragMoved = false;
-  });
-
-  styleHandle.addEventListener('pointercancel', () => {
-    dragStartY = null;
-    dragMoved = false;
+  joOpenButton.addEventListener('click', () => {
+    closeOptions();
+    closePanel();
+    openJoPanel();
   });
 
   closeStylePanelButton.addEventListener('click', closePanel);
