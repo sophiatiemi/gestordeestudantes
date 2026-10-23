@@ -48,7 +48,7 @@
   const joSendButton = document.getElementById('jo-send');
   const joMessages = document.getElementById('jo-messages');
 
-  const JO_LOGO_SVG = `<img class="jo-logo-video" src="media/jo-loading.png" alt="" />`;
+  const JO_LOGO_SVG = `<img class="jo-logo-video" src="media/jo-loading-dark.png" alt="" />`;
 
   const STYLES = [
     { id: 'padrao', label: 'Padrão', filter: 'none', gradient: 'linear-gradient(135deg,#3a3a3a,#161616)' },
