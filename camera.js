@@ -36,10 +36,7 @@
   const joSendButton = document.getElementById('jo-send');
   const joMessages = document.getElementById('jo-messages');
 
-  const JO_LOGO_SVG = `<video class="jo-logo-video" poster="media/jo-poster.jpg" autoplay loop muted playsinline>
-      <source src="media/jo-loading.webm" type="video/webm" />
-      <source src="media/jo-loading.mp4" type="video/mp4" />
-    </video>`;
+  const JO_LOGO_SVG = `<img class="jo-logo-video" src="media/jo-loading.png" alt="" />`;
 
   const STYLES = [
     { id: 'padrao', label: 'Padrão', filter: 'none', gradient: 'linear-gradient(135deg,#3a3a3a,#161616)' },
@@ -382,6 +379,10 @@
   // ---------- Foco: tocar na imagem move o quadrado ----------
 
   preview.addEventListener('pointerdown', (e) => {
+    if (cameraScreen.classList.contains('jo-open')) {
+      closeJoPanel();
+      return;
+    }
     closeOptions();
     const rect = cameraScreen.getBoundingClientRect();
     focusBox.style.left = `${e.clientX - rect.left}px`;
@@ -393,22 +394,8 @@
 
   // ---------- Tela da Jô ----------
 
-  function playJoVideo(el) {
-    if (!el) return;
-    const video = el.tagName === 'VIDEO' ? el : el.querySelector('video');
-    if (!video) return;
-    video.currentTime = 0;
-    const playPromise = video.play();
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(() => {
-        // Autoplay recusado — tenta de novo na próxima interação do usuário.
-      });
-    }
-  }
-
   function openJoPanel() {
     cameraScreen.classList.add('jo-open');
-    playJoVideo(document.getElementById('jo-logo-idle'));
   }
 
   function closeJoPanel() {
@@ -431,7 +418,6 @@
       flyer.style.height = `${startRect.height}px`;
       flyer.style.margin = '0';
       document.body.appendChild(flyer);
-      playJoVideo(flyer);
     }
 
     joPanel.classList.add('has-sent');
@@ -468,12 +454,10 @@
 
       setTimeout(() => {
         statusLogo.style.opacity = '1';
-        playJoVideo(statusLogo);
         flyer.remove();
       }, 560);
     } else if (statusLogo) {
       statusLogo.style.opacity = '1';
-      playJoVideo(statusLogo);
     }
   }
 
