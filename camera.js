@@ -24,6 +24,9 @@
   const styleTabButtons = document.querySelectorAll('.style-tab');
   const modeTabButtons = document.querySelectorAll('.mode-tabs span');
   const zoomButtons = document.querySelectorAll('.zoom-bar button');
+  const optionsToggle = document.getElementById('options-toggle');
+  const optionItems = document.querySelectorAll('.option-item');
+  const focusBox = document.getElementById('focus-box');
 
   const joPanel = document.getElementById('jo-panel');
   const joCollapse = document.getElementById('jo-collapse');
@@ -315,6 +318,7 @@
   }
 
   function openPanel() {
+    closeOptions();
     cameraScreen.classList.add('panel-open');
     setActiveMode('estilos');
     renderStrip(currentPanelTab);
@@ -336,7 +340,56 @@
     modeTabButtons.forEach((span) => {
       span.classList.toggle('active', span.dataset.mode === mode);
     });
+    centerActiveMode(true);
   }
+
+  function centerActiveMode(smooth) {
+    const wrap = document.querySelector('.mode-tabs-wrap');
+    const active = wrap && wrap.querySelector('.active');
+    if (!active) return;
+    const left = active.offsetLeft - (wrap.clientWidth - active.offsetWidth) / 2;
+    wrap.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' });
+  }
+
+  // ---------- Menu dos 6 pontinhos ----------
+
+  function openOptions() {
+    closePanel();
+    cameraScreen.classList.add('options-open');
+    optionsToggle.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeOptions() {
+    cameraScreen.classList.remove('options-open');
+    optionsToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  optionsToggle.addEventListener('click', () => {
+    if (cameraScreen.classList.contains('options-open')) {
+      closeOptions();
+    } else {
+      openOptions();
+    }
+  });
+
+  optionItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const on = item.getAttribute('aria-checked') !== 'true';
+      item.setAttribute('aria-checked', String(on));
+    });
+  });
+
+  // ---------- Foco: tocar na imagem move o quadrado ----------
+
+  preview.addEventListener('pointerdown', (e) => {
+    closeOptions();
+    const rect = cameraScreen.getBoundingClientRect();
+    focusBox.style.left = `${e.clientX - rect.left}px`;
+    focusBox.style.top = `${e.clientY - rect.top}px`;
+    focusBox.classList.remove('pulse');
+    void focusBox.offsetWidth;
+    focusBox.classList.add('pulse');
+  });
 
   // ---------- Tela da Jô ----------
 
@@ -515,6 +568,8 @@
   zoomButtons.forEach((btn) => {
     btn.addEventListener('click', () => applyZoom(Number(btn.dataset.zoom)));
   });
+
+  centerActiveMode(false);
 
   // ---------- Eventos gerais ----------
 

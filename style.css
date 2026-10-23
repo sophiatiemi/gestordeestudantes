@@ -64,31 +64,109 @@ button {
   transition: opacity 350ms ease-out;
 }
 
-/* ---------- Barra superior (decorativa) ---------- */
+/* ---------- Liquid glass ---------- */
+
+.glass {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0.06) 48%, rgba(255, 255, 255, 0.14) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.18),
+    0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+/* ---------- Grade e foco ---------- */
+
+#grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+#grid-overlay .gl {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+#grid-overlay .v1, #grid-overlay .v2 { top: 0; bottom: 0; width: 1px; }
+#grid-overlay .h1, #grid-overlay .h2 { left: 0; right: 0; height: 1px; }
+#grid-overlay .v1 { left: 33.333%; }
+#grid-overlay .v2 { left: 66.666%; }
+#grid-overlay .h1 { top: 33.333%; }
+#grid-overlay .h2 { top: 66.666%; }
+
+#focus-box {
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  border: 1.5px solid var(--accent);
+  pointer-events: none;
+  z-index: 3;
+}
+
+#focus-box.pulse {
+  animation: focus-pulse 450ms ease-out;
+}
+
+@keyframes focus-pulse {
+  0% { transform: scale(1.35); opacity: 0.4; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+#focus-box .tick {
+  position: absolute;
+  background: var(--accent);
+}
+
+#focus-box .tick.t, #focus-box .tick.b { left: 50%; width: 1.5px; height: 8px; margin-left: -0.75px; }
+#focus-box .tick.l, #focus-box .tick.r { top: 50%; height: 1.5px; width: 8px; margin-top: -0.75px; }
+#focus-box .tick.t { top: 0; }
+#focus-box .tick.b { bottom: 0; }
+#focus-box .tick.l { left: 0; }
+#focus-box .tick.r { right: 0; }
+
+#focus-box .cross {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  background:
+    linear-gradient(#fff, #fff) center / 100% 1.5px no-repeat,
+    linear-gradient(#fff, #fff) center / 1.5px 100% no-repeat;
+}
+
+/* ---------- Barra superior ---------- */
 
 .top-bar {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: calc(var(--safe-top) + 58px);
-  padding: var(--safe-top) 18px 0;
+  top: calc(var(--safe-top) + 14px);
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  gap: 26px;
+  padding: 9px 22px;
+  border-radius: 999px;
   z-index: 10;
-  background: #000;
 }
 
 .top-icon {
   width: 24px;
   height: 24px;
+  padding: 0;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.92);
+  color: #fff;
 }
 
 .top-icon svg {
@@ -96,15 +174,25 @@ button {
   height: 100%;
 }
 
-.top-icon.pill {
-  width: auto;
-  height: auto;
-  padding: 4px 9px;
-  font-size: 11px;
+.top-icon.accent {
+  color: var(--accent);
+}
+
+.top-ev {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.top-ev small {
+  font-size: 8px;
   font-weight: 700;
+  margin-top: 2px;
   letter-spacing: 0.5px;
-  border-radius: 999px;
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
 }
 
 .live-dot {
@@ -124,35 +212,27 @@ button {
   display: none;
 }
 
-.icon-btn {
-  width: 40px;
-  height: 40px;
+.round-btn {
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(6px);
+  flex-shrink: 0;
+  color: #fff;
 }
 
-/* ---------- Fundo preto sólido atrás dos controles de baixo ---------- */
-
-#bottom-scrim {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: calc(var(--safe-bottom) + 216px);
-  background: #000;
-  z-index: 9;
+.round-btn svg {
+  width: 24px;
+  height: 24px;
 }
 
-/* ---------- Barra de zoom ---------- */
+/* ---------- Zoom ---------- */
 
 .zoom-bar-wrap {
   position: absolute;
-  bottom: 190px;
+  bottom: calc(var(--safe-bottom) + 232px);
   left: 0;
   right: 0;
   z-index: 10;
@@ -161,6 +241,7 @@ button {
   overflow-x: auto;
   scrollbar-width: none;
   touch-action: pan-x;
+  transition: opacity 200ms ease;
 }
 
 .zoom-bar-wrap::-webkit-scrollbar {
@@ -169,86 +250,49 @@ button {
 
 .zoom-bar {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
-  background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
-  border-radius: 999px;
-  padding: 6px;
 }
 
 .zoom-bar button {
-  font-size: 13px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  font-size: 15px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  padding: 6px 12px;
-  border-radius: 999px;
+  color: #fff;
+  border: 1px solid transparent;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .zoom-bar button.active {
-  color: #1a1a1a;
-  background: var(--accent);
+  color: var(--accent);
+  text-shadow: none;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.45), 0 6px 18px rgba(0, 0, 0, 0.3);
 }
 
-#camera-screen.panel-open .zoom-bar-wrap {
+#camera-screen.panel-open .zoom-bar-wrap,
+#camera-screen.options-open .zoom-bar-wrap {
   opacity: 0;
   pointer-events: none;
-}
-
-/* ---------- Abas de modo (roláveis) ---------- */
-
-.mode-tabs-wrap {
-  position: absolute;
-  bottom: calc(var(--safe-bottom) + 150px);
-  left: 0;
-  right: 0;
-  z-index: 10;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  touch-action: pan-x;
-}
-
-.mode-tabs-wrap::-webkit-scrollbar {
-  display: none;
-}
-
-.mode-tabs {
-  display: flex;
-  width: max-content;
-  min-width: 100%;
-  justify-content: center;
-  gap: 26px;
-  padding: 0 32px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.55);
-}
-
-.mode-tabs span {
-  padding: 4px 2px;
-}
-
-.mode-tabs .active {
-  color: var(--accent);
 }
 
 /* ---------- Painel de estilos ---------- */
 
 #style-panel {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--safe-bottom) + 192px);
+  left: 10px;
+  right: 10px;
+  bottom: calc(var(--safe-bottom) + 216px);
   z-index: 12;
-  padding: 10px 16px 14px;
-  background: rgba(10, 10, 10, 0.55);
-  backdrop-filter: blur(10px);
-  border-radius: 16px 16px 0 0;
-  margin: 0 6px;
+  padding: 12px 16px 14px;
+  border-radius: 24px;
   opacity: 0;
   transform: translateY(16px);
   pointer-events: none;
@@ -267,7 +311,7 @@ button {
   gap: 18px;
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 12px;
 }
 
@@ -284,7 +328,7 @@ button {
 .style-panel-tabs #close-style-panel {
   margin-left: auto;
   font-size: 15px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .style-strip {
@@ -303,7 +347,7 @@ button {
 
 .style-strip .empty-state {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   padding: 20px 4px;
 }
 
@@ -319,7 +363,7 @@ button {
 .style-tile .swatch {
   width: 68px;
   height: 68px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 2px solid transparent;
   background-size: cover;
   background-position: center;
@@ -332,7 +376,7 @@ button {
 
 .style-tile span {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .style-tile.active span {
@@ -340,7 +384,193 @@ button {
   font-weight: 600;
 }
 
-/* ---------- Alça "Jô" ---------- */
+/* ---------- Menu dos 6 pontinhos ---------- */
+
+#options-menu {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: calc(var(--safe-bottom) + 216px);
+  z-index: 12;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: 26px;
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  transform-origin: bottom right;
+  pointer-events: none;
+  transition: opacity 200ms ease, transform 220ms cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+
+#camera-screen.options-open #options-menu {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 0;
+  border-radius: 16px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.option-item svg {
+  width: 24px;
+  height: 24px;
+}
+
+.option-item .option-live {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 7px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.option-item[aria-checked="true"] {
+  color: var(--accent);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* ---------- Disparador ---------- */
+
+.shutter-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--safe-bottom) + 118px);
+  height: 84px;
+  z-index: 10;
+}
+
+.shutter-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 76px;
+  height: 76px;
+  margin: -38px 0 0 -38px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 0 0 6px rgba(28, 28, 30, 0.85),
+    0 0 0 7px rgba(255, 255, 255, 0.22),
+    0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 100ms ease;
+}
+
+.shutter-btn:active {
+  transform: scale(0.92);
+}
+
+.options-btn {
+  position: absolute;
+  right: 30px;
+  top: 50%;
+  width: 58px;
+  height: 58px;
+  margin-top: -29px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: transform 200ms ease;
+}
+
+.options-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+#camera-screen.options-open .options-btn {
+  transform: rotate(90deg);
+  color: var(--accent);
+}
+
+/* ---------- Barra inferior ---------- */
+
+.bottom-bar {
+  position: absolute;
+  bottom: calc(var(--safe-bottom) + 40px);
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  z-index: 10;
+}
+
+.thumb-btn {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.1) center/cover no-repeat;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.mode-tabs-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 54px;
+  padding: 6px;
+  border-radius: 999px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.mode-tabs-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.mode-tabs {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  gap: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mode-tabs span {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: color 200ms ease, background 200ms ease;
+}
+
+.mode-tabs .active {
+  color: var(--accent);
+  background: rgba(0, 0, 0, 0.32);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- Alça "Novo Estilo" ---------- */
 
 #style-handle {
   position: absolute;
@@ -351,17 +581,18 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.65);
-  padding: 6px 14px;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  padding: 4px 14px;
   touch-action: none;
 }
 
 #style-handle .chevron {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   transition: transform 200ms ease;
 }
@@ -372,46 +603,6 @@ button {
 
 #camera-screen.jo-open #style-handle {
   color: var(--accent);
-}
-
-/* ---------- Barra inferior ---------- */
-
-.bottom-bar {
-  position: absolute;
-  bottom: calc(var(--safe-bottom) + 54px);
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  z-index: 10;
-}
-
-.thumb-btn {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.08) center/cover no-repeat;
-}
-
-.shutter-btn {
-  width: 76px;
-  height: 76px;
-  border-radius: 50%;
-  background: #fff;
-  border: 4px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9) inset;
-  transition: transform 100ms ease;
-}
-
-.shutter-btn:active {
-  transform: scale(0.9);
-}
-
-.flip-btn {
-  font-size: 22px;
 }
 
 /* ---------- Overlay de permissão ---------- */
@@ -470,8 +661,26 @@ button {
   object-fit: cover;
 }
 
-#review-screen .top-bar #close-review {
-  color: #fff;
+#review-screen .review-back {
+  position: absolute;
+  top: calc(var(--safe-top) + 10px);
+  left: 14px;
+  width: 44px;
+  height: 44px;
+  z-index: 2;
+}
+
+#review-screen .review-back svg {
+  width: 20px;
+  height: 20px;
+}
+
+#review-screen .top-bar {
+  left: auto;
+  right: 14px;
+  transform: none;
+  gap: 20px;
+  padding: 9px 18px;
 }
 
 /* ---------- Tela da Jô ---------- */
