@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=25" />
+  <link rel="stylesheet" href="style.css?v=26" />
 </head>
 <body>
 
@@ -153,7 +153,6 @@
         <button class="jo-icon-btn" aria-label="Menu" tabindex="-1">☰</button>
         <button id="jo-collapse" class="jo-collapse" aria-label="Voltar para a câmera">⌄</button>
         <div class="jo-right-cluster">
-          <button class="jo-icon-btn jo-edit-btn" aria-label="Editar" tabindex="-1">✏️</button>
           <button id="jo-test" class="jo-test-btn" aria-label="Testar na câmera">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 8h2l1.5-2h9L18 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" />
@@ -202,7 +201,7 @@
 
   <div id="review-screen" class="hidden">
     <img id="review-photo" alt="Foto capturada" />
-    <video id="review-video" class="hidden" playsinline muted loop></video>
+    <video id="review-video" class="hidden" playsinline muted loop controls preload="auto"></video>
 
     <div class="review-actions">
       <button id="review-gallery" class="glass round-btn" aria-label="Abrir galeria">
@@ -276,6 +275,6 @@
 
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=25"></script>
+  <script src="camera.js?v=26"></script>
 </body>
 </html>

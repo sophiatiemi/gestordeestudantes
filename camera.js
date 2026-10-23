@@ -350,9 +350,8 @@
       reviewPhoto.removeAttribute('src');
       reviewVideo.src = item.url;
       if (item.posterUrl) reviewVideo.poster = item.posterUrl;
-      setVideoSound(false);
-      const playing = reviewVideo.play();
-      if (playing && playing.catch) playing.catch(() => {});
+      reviewVideo.load();
+      playVideo();
     } else {
       reviewVideo.pause();
       reviewVideo.removeAttribute('src');
@@ -367,6 +366,18 @@
     reviewScreen.classList.add('hidden');
     viewerItem = null;
     if (viewerFrom === 'gallery') openGallery();
+  }
+
+  // Tenta tocar com som; se o navegador bloquear, toca mudo (o botão de som liga depois).
+  function playVideo() {
+    setVideoSound(true);
+    const playing = reviewVideo.play();
+    if (playing && playing.catch) {
+      playing.catch(() => {
+        setVideoSound(false);
+        reviewVideo.play().catch(() => {});
+      });
+    }
   }
 
   function setVideoSound(on) {
@@ -390,7 +401,7 @@
   // ---------- Vídeo ----------
 
   function pickRecorderType() {
-    const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+    const types = ['video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
     return types.find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
   }
 
@@ -446,7 +457,8 @@
       if (e.data && e.data.size) recordChunks.push(e.data);
     };
     recorder.onstop = finishRecording;
-    recorder.start(250);
+    // Sem fatias: no iPhone o MP4 em pedaços pode sair impossível de tocar.
+    recorder.start();
     recordStart = Date.now();
     updateRecTime();
     recordTimer = setInterval(updateRecTime, 250);
@@ -615,8 +627,35 @@
   }
 
   function closeJoPanel() {
+    joInput.blur();
     cameraScreen.classList.remove('jo-open');
   }
+
+  // Com o teclado aberto, o painel cabe só na parte visível da tela
+  // e a logo fica menor para não ficar por baixo da caixa de texto.
+  function fitJoPanelToKeyboard() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const keyboardOpen = window.innerHeight - vv.height > 120;
+    joPanel.classList.toggle('kb-open', keyboardOpen);
+    if (keyboardOpen) {
+      const height = Math.min(vv.height - 16, Math.max(230, vv.height * 0.62));
+      joPanel.style.top = `${vv.offsetTop + vv.height - height - 8}px`;
+      joPanel.style.bottom = 'auto';
+      joPanel.style.height = `${height}px`;
+    } else {
+      joPanel.style.top = '';
+      joPanel.style.bottom = '';
+      joPanel.style.height = '';
+    }
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', fitJoPanelToKeyboard);
+    window.visualViewport.addEventListener('scroll', fitJoPanelToKeyboard);
+  }
+  joInput.addEventListener('focus', () => setTimeout(fitJoPanelToKeyboard, 300));
+  joInput.addEventListener('blur', () => setTimeout(fitJoPanelToKeyboard, 300));
 
   function sendJoMessage(text) {
     const idleLogoEl = document.getElementById('jo-logo-idle');
@@ -754,10 +793,6 @@
   });
   reviewDeleteButton.addEventListener('click', deleteViewerItem);
   reviewSoundButton.addEventListener('click', () => setVideoSound(reviewVideo.muted));
-  reviewVideo.addEventListener('click', () => {
-    if (reviewVideo.paused) reviewVideo.play();
-    else reviewVideo.pause();
-  });
 
   window.addEventListener('beforeunload', () => {
     gallery.forEach((item) => URL.revokeObjectURL(item.url));

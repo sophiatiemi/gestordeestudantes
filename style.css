@@ -772,9 +772,13 @@ button {
 
 /* ---------- Visualizador (foto e vídeo) ---------- */
 
+/* O vídeo termina acima dos botões para os controles (play, barra de tempo) ficarem livres. */
 #review-video {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--safe-bottom) - 104px);
   object-fit: cover;
   background: #000;
 }
@@ -978,18 +982,6 @@ button {
   margin-left: auto;
 }
 
-.jo-edit-btn {
-  font-size: 16px;
-  opacity: 0;
-  transform: scale(0.7);
-  transition: opacity 200ms ease, transform 200ms ease;
-}
-
-#jo-panel.has-sent .jo-edit-btn {
-  opacity: 1;
-  transform: scale(1);
-}
-
 .jo-test-btn {
   display: flex;
   align-items: center;
@@ -1029,6 +1021,24 @@ button {
 
 #jo-panel.has-sent #jo-idle {
   display: none;
+}
+
+#jo-panel.kb-open .jo-topbar {
+  padding: 10px 16px 4px;
+}
+
+#jo-panel.kb-open #jo-body {
+  padding-bottom: 8px;
+}
+
+#jo-panel.kb-open #jo-idle {
+  gap: 6px;
+  font-size: 14px;
+}
+
+#jo-panel.kb-open #jo-idle .jo-logo {
+  width: 68px;
+  height: 35px;
 }
 
 .jo-logo {
