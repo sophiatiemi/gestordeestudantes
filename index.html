@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=28" />
+  <link rel="stylesheet" href="style.css?v=29" />
 </head>
 <body>
 
@@ -174,8 +174,20 @@
         <div id="jo-messages"></div>
       </div>
 
+      <!-- Escolher foto para mandar à Jô: fotos da câmera ou do celular -->
+      <div id="jo-attach-sheet" class="hidden">
+        <p class="jo-attach-title">Adicionar foto</p>
+        <div id="jo-attach-row" class="jo-attach-row"></div>
+      </div>
+      <input type="file" id="jo-file" accept="image/*" class="jo-file-input" tabindex="-1" aria-hidden="true" />
+
+      <div id="jo-attachment" class="hidden">
+        <img id="jo-attachment-img" alt="Foto escolhida" />
+        <button type="button" id="jo-attachment-remove" aria-label="Remover foto">×</button>
+      </div>
+
       <form id="jo-input-bar">
-        <button type="button" class="jo-attach" aria-label="Anexar" tabindex="-1">+</button>
+        <button type="button" id="jo-attach" class="jo-attach" aria-label="Adicionar foto" aria-expanded="false">+</button>
         <input type="text" id="jo-input" placeholder="Qual a sua ideia?" autocomplete="off" />
         <button type="button" class="jo-mic" aria-label="Voz" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -275,6 +287,6 @@
 
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=28"></script>
+  <script src="camera.js?v=29"></script>
 </body>
 </html>

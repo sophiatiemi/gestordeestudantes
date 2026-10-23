@@ -1175,3 +1175,152 @@ button {
   width: 16px;
   height: 16px;
 }
+
+/* ---------- Resposta da Jô ---------- */
+
+.jo-msg-status.answered {
+  align-items: flex-start;
+  max-width: 88%;
+}
+
+.jo-msg-status.answered .jo-logo {
+  margin-top: 4px;
+}
+
+.jo-reply {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  animation: jo-reply-in 320ms ease both;
+}
+
+.jo-reply-text {
+  margin: 0;
+  background: #f2f3f7;
+  color: #1b1b22;
+  font-size: 14.5px;
+  line-height: 1.45;
+  padding: 10px 14px;
+  border-radius: 16px 16px 16px 4px;
+}
+
+.jo-reply-test {
+  background: var(--jo-blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(var(--jo-blue-rgb), 0.3);
+}
+
+@keyframes jo-reply-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+
+/* ---------- Anexar foto no chat ---------- */
+
+.jo-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#jo-attach-sheet {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 76px;
+  z-index: 3;
+  background: #fff;
+  border: 1px solid #e3e6f2;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(20, 30, 80, 0.18);
+  padding: 12px;
+  animation: jo-reply-in 200ms ease both;
+}
+
+.jo-attach-title {
+  margin: 0 0 10px 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a4d63;
+}
+
+.jo-attach-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.jo-attach-row::-webkit-scrollbar {
+  display: none;
+}
+
+.jo-attach-tile {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+  background: #eef1ff center/cover no-repeat;
+}
+
+.jo-attach-phone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--jo-blue);
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px dashed #b9c4ff;
+}
+
+.jo-attach-phone svg {
+  width: 24px;
+  height: 24px;
+}
+
+.jo-attach-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #8a90b0;
+}
+
+#jo-attachment {
+  position: relative;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin: 0 0 8px 24px;
+}
+
+#jo-attachment img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+#jo-attachment-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1b1b22;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

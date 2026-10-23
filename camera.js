@@ -47,6 +47,13 @@
   const joInput = document.getElementById('jo-input');
   const joSendButton = document.getElementById('jo-send');
   const joMessages = document.getElementById('jo-messages');
+  const joAttachButton = document.getElementById('jo-attach');
+  const joAttachSheet = document.getElementById('jo-attach-sheet');
+  const joAttachRow = document.getElementById('jo-attach-row');
+  const joFile = document.getElementById('jo-file');
+  const joAttachment = document.getElementById('jo-attachment');
+  const joAttachmentImg = document.getElementById('jo-attachment-img');
+  const joAttachmentRemove = document.getElementById('jo-attachment-remove');
 
   const JO_LOGO_SVG = `<img class="jo-logo-video" src="media/jo-loading-dark.png" alt="" />`;
 
@@ -278,11 +285,6 @@
   function addToGallery(item) {
     gallery.unshift(item);
     updateThumbnail();
-  }
-
-  function latestPhotoUrl() {
-    const photo = gallery.find((item) => item.type === 'photo');
-    return photo ? photo.url : null;
   }
 
   function itemPreviewUrl(item) {
@@ -657,9 +659,115 @@
   joInput.addEventListener('focus', () => setTimeout(fitJoPanelToKeyboard, 300));
   joInput.addEventListener('blur', () => setTimeout(fitJoPanelToKeyboard, 300));
 
-  function sendJoMessage(text) {
+  // ---------- Foto anexada no chat ----------
+
+  let joAttachedUrl = null;
+
+  function openAttachSheet() {
+    joAttachRow.innerHTML = '';
+
+    const fromPhone = document.createElement('button');
+    fromPhone.type = 'button';
+    fromPhone.className = 'jo-attach-tile jo-attach-phone';
+    fromPhone.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="9" cy="10" r="1.8" /><path d="m4 18 5-5 3 3 3-3 5 5" /></svg><span>Do celular</span>`;
+    fromPhone.addEventListener('click', () => joFile.click());
+    joAttachRow.appendChild(fromPhone);
+
+    const photos = gallery.filter((item) => item.type === 'photo');
+    photos.forEach((item) => {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'jo-attach-tile';
+      tile.style.backgroundImage = `url(${item.url})`;
+      tile.setAttribute('aria-label', 'Usar esta foto');
+      tile.addEventListener('click', () => setAttachment(item.url));
+      joAttachRow.appendChild(tile);
+    });
+    if (!photos.length) {
+      const hint = document.createElement('p');
+      hint.className = 'jo-attach-hint';
+      hint.textContent = 'As fotos que você tirar na câmera aparecem aqui.';
+      joAttachRow.appendChild(hint);
+    }
+
+    joAttachSheet.classList.remove('hidden');
+    joAttachButton.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeAttachSheet() {
+    joAttachSheet.classList.add('hidden');
+    joAttachButton.setAttribute('aria-expanded', 'false');
+  }
+
+  function setAttachment(url) {
+    joAttachedUrl = url;
+    joAttachmentImg.src = url;
+    joAttachment.classList.remove('hidden');
+    closeAttachSheet();
+  }
+
+  function clearAttachment() {
+    joAttachedUrl = null;
+    joAttachmentImg.removeAttribute('src');
+    joAttachment.classList.add('hidden');
+  }
+
+  joAttachButton.addEventListener('click', () => {
+    if (joAttachSheet.classList.contains('hidden')) openAttachSheet();
+    else closeAttachSheet();
+  });
+
+  joFile.addEventListener('change', () => {
+    const file = joFile.files && joFile.files[0];
+    if (file) setAttachment(URL.createObjectURL(file));
+    joFile.value = '';
+  });
+
+  joAttachmentRemove.addEventListener('click', clearAttachment);
+
+  joPanel.addEventListener('click', (e) => {
+    if (!joAttachSheet.classList.contains('hidden') && !joAttachSheet.contains(e.target) && !joAttachButton.contains(e.target)) {
+      closeAttachSheet();
+    }
+  });
+
+  // ---------- Respostas da Jô (genéricas, servem para qualquer pedido) ----------
+
+  const JO_REPLIES_PHOTO = [
+    'Que referência incrível! 📸 Analisei as cores, a luz e o clima dessa foto e criei um estilo parecido pra você. É só tocar em Testar e apontar a câmera.',
+    'Amei essa foto! ✨ Já entendi a vibe: copiei o tom das cores, o contraste e a luz pra sua próxima foto ficar no mesmo clima.',
+    'Referência anotada! 🎨 Montei um estilo inspirado nessa imagem, com as mesmas cores e o mesmo brilho. Bora testar?',
+  ];
+
+  const JO_REPLIES_TEXT = [
+    'Boa ideia! ✨ Criei um estilo pensado pra esse momento: luz ajustada, cores mais vivas e um toque de contraste pra sua foto ficar com cara de capa.',
+    'Deixa comigo! 📷 Ajustei exposição, cores e nitidez pra combinar com o que você descreveu. Toque em Testar e faça a foto.',
+    'Entendi o clima! 🌟 Montei um estilo exclusivo pra essa cena. Se quiser, toque no + e mande uma foto de referência que eu deixo ainda mais parecido.',
+  ];
+
+  const joReplyCount = { photo: 0, text: 0 };
+
+  function showJoReply(status, withPhoto) {
+    const kind = withPhoto ? 'photo' : 'text';
+    const replies = withPhoto ? JO_REPLIES_PHOTO : JO_REPLIES_TEXT;
+    const text = replies[joReplyCount[kind] % replies.length];
+    joReplyCount[kind] += 1;
+
+    status.classList.add('answered');
+    const body = document.createElement('div');
+    body.className = 'jo-reply';
+    body.innerHTML = `<p class="jo-reply-text"></p><button type="button" class="jo-reply-test">✨ Testar estilo na câmera</button>`;
+    body.querySelector('.jo-reply-text').textContent = text;
+    body.querySelector('.jo-reply-test').addEventListener('click', closeJoPanel);
+    status.querySelector('.jo-status-text').replaceWith(body);
+    status.scrollIntoView({ block: 'end', behavior: 'smooth' });
+  }
+
+  function sendJoMessage(text, photoUrl) {
     const idleLogoEl = document.getElementById('jo-logo-idle');
-    const startRect = idleLogoEl ? idleLogoEl.getBoundingClientRect() : null;
+    const idleRect = idleLogoEl ? idleLogoEl.getBoundingClientRect() : null;
+    // Na segunda mensagem a logo do meio já sumiu: não há o que animar.
+    const startRect = idleRect && idleRect.width ? idleRect : null;
 
     let flyer = null;
     if (startRect) {
@@ -679,10 +787,19 @@
 
     const userMsg = document.createElement('div');
     userMsg.className = 'jo-msg-user';
-    const lastPhoto = latestPhotoUrl();
-    const thumbHtml = lastPhoto ? `<img class="jo-thumb" src="${lastPhoto}" alt="Foto anexada" />` : '';
-    userMsg.innerHTML = `${thumbHtml}<p class="jo-bubble"></p>`;
-    userMsg.querySelector('.jo-bubble').textContent = text;
+    if (photoUrl) {
+      const thumb = document.createElement('img');
+      thumb.className = 'jo-thumb';
+      thumb.src = photoUrl;
+      thumb.alt = 'Foto anexada';
+      userMsg.appendChild(thumb);
+    }
+    if (text) {
+      const bubble = document.createElement('p');
+      bubble.className = 'jo-bubble';
+      bubble.textContent = text;
+      userMsg.appendChild(bubble);
+    }
     joMessages.appendChild(userMsg);
 
     const status = document.createElement('div');
@@ -715,13 +832,17 @@
     } else if (statusLogo) {
       statusLogo.style.opacity = '1';
     }
+
+    setTimeout(() => showJoReply(status, !!photoUrl), 2600);
   }
 
   function handleJoSend() {
     const text = joInput.value.trim();
-    if (!text) return;
-    sendJoMessage(text);
+    if (!text && !joAttachedUrl) return;
+    closeAttachSheet();
+    sendJoMessage(text, joAttachedUrl);
     joInput.value = '';
+    clearAttachment();
   }
 
   joInputForm.addEventListener('submit', (e) => {
