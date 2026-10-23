@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=24" />
+  <link rel="stylesheet" href="style.css?v=25" />
 </head>
 <body>
 
@@ -48,6 +48,10 @@
           <path d="M11 4V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2" />
         </svg>
       </button>
+    </div>
+
+    <div id="rec-timer" class="glass" aria-live="polite">
+      <span class="rec-dot"></span><span id="rec-time">00:00</span>
     </div>
 
     <div class="zoom-bar-wrap">
@@ -125,7 +129,7 @@
     </div>
 
     <div class="bottom-bar">
-      <button id="thumbnail" class="thumb-btn" aria-label="Última foto" disabled></button>
+      <button id="thumbnail" class="thumb-btn" aria-label="Abrir galeria"></button>
       <div class="mode-tabs-wrap glass">
         <div class="mode-tabs">
           <span data-mode="video">VÍDEO</span>
@@ -190,7 +194,7 @@
 
     <div id="permission-overlay">
       <div class="permission-card">
-        <p id="permission-text">Esta demonstração usa a câmera do seu celular.<br />Nenhuma foto é salva ou enviada — tudo acontece só no seu navegador.</p>
+        <p id="permission-text">Esta demonstração usa a câmera do seu celular.<br />Nada é enviado: suas fotos e vídeos ficam só neste navegador e somem ao fechar a página.</p>
         <button id="start-camera">Ativar câmera</button>
       </div>
     </div>
@@ -198,6 +202,28 @@
 
   <div id="review-screen" class="hidden">
     <img id="review-photo" alt="Foto capturada" />
+    <video id="review-video" class="hidden" playsinline muted loop></video>
+
+    <div class="review-actions">
+      <button id="review-gallery" class="glass round-btn" aria-label="Abrir galeria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+          <rect x="3" y="3" width="7.5" height="7.5" rx="1.5" /><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5" />
+          <rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5" /><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5" />
+        </svg>
+      </button>
+      <button id="review-sound" class="glass round-btn hidden" aria-label="Ligar som" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 9v6h4l5 4V5L8 9H4z" />
+          <line class="mute-slash" x1="16" y1="9" x2="22" y2="15" /><line class="mute-slash" x1="22" y1="9" x2="16" y2="15" />
+          <path class="sound-wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" />
+        </svg>
+      </button>
+      <button id="review-delete" class="glass round-btn" aria-label="Apagar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 7h16" /><path d="M9 7V4h6v3" /><path d="M6 7l1 13h10l1-13" /><path d="M10 11v6M14 11v6" />
+        </svg>
+      </button>
+    </div>
 
     <button id="close-review" class="glass round-btn review-back" aria-label="Voltar para a câmera">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -231,8 +257,25 @@
     </div>
   </div>
 
+  <div id="gallery-screen" class="hidden">
+    <div class="gallery-header">
+      <button id="gallery-back" class="glass round-btn" aria-label="Voltar para a câmera">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5" /><path d="M11 18 5 12l6-6" />
+        </svg>
+      </button>
+      <div class="gallery-title">
+        <h1>Galeria</h1>
+        <span id="gallery-count"></span>
+      </div>
+    </div>
+    <div id="gallery-grid"></div>
+    <p id="gallery-empty">Nenhuma foto ou vídeo ainda.<br />O que você capturar aparece aqui.</p>
+    <p class="gallery-note">Fica salvo só enquanto esta página estiver aberta.</p>
+  </div>
+
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=24"></script>
+  <script src="camera.js?v=25"></script>
 </body>
 </html>

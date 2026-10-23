@@ -693,6 +693,210 @@ button {
   padding: 6px 14px;
 }
 
+/* ---------- Gravação de vídeo ---------- */
+
+#rec-timer {
+  position: absolute;
+  top: calc(var(--safe-top) + 66px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  white-space: nowrap;
+  z-index: 12;
+}
+
+#camera-screen.recording #rec-timer,
+#camera-screen.rec-error #rec-timer {
+  display: flex;
+}
+
+#camera-screen.rec-error .rec-dot {
+  display: none;
+}
+
+.rec-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff3b30;
+  animation: rec-blink 1s steps(2, start) infinite;
+}
+
+@keyframes rec-blink {
+  to { visibility: hidden; }
+}
+
+#camera-screen.mode-video .shutter-btn::after {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: #ff3b30;
+  transition: inset 200ms ease, border-radius 200ms ease;
+}
+
+#camera-screen.recording .shutter-btn::after {
+  inset: 20px;
+  border-radius: 6px;
+}
+
+#camera-screen.recording .thumb-btn,
+#camera-screen.recording .mode-tabs-wrap,
+#camera-screen.recording #flip-camera,
+#camera-screen.recording .options-btn,
+#camera-screen.recording .jo-round-btn {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+#camera-screen.recording .zoom-bar-wrap {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.thumb-btn.pop {
+  animation: thumb-pop 320ms ease;
+}
+
+@keyframes thumb-pop {
+  40% { transform: scale(1.18); }
+}
+
+/* ---------- Visualizador (foto e vídeo) ---------- */
+
+#review-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #000;
+}
+
+.review-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--safe-bottom) + 28px);
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  z-index: 2;
+}
+
+.review-actions .round-btn {
+  width: 52px;
+  height: 52px;
+}
+
+#review-delete {
+  color: #ff6b61;
+}
+
+#review-sound[aria-pressed='true'] .mute-slash,
+#review-sound[aria-pressed='false'] .sound-wave {
+  display: none;
+}
+
+/* ---------- Galeria ---------- */
+
+#gallery-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 45;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--safe-bottom) + 24px);
+}
+
+.gallery-header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: calc(var(--safe-top) + 10px) 14px 12px;
+  background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.55));
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  z-index: 2;
+}
+
+.gallery-header .round-btn {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+.gallery-header .round-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.gallery-title h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+#gallery-count {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.gallery-tile {
+  position: relative;
+  aspect-ratio: 1;
+  background: #1c1c1e center/cover no-repeat;
+}
+
+.gallery-tile:active {
+  opacity: 0.7;
+}
+
+.video-badge {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+#gallery-empty {
+  margin: 30vh 24px 0;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.gallery-note {
+  margin: 18px 24px 0;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
 /* ---------- Tela da Jô ---------- */
 
 #jo-panel {

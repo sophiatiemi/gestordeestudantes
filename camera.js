@@ -12,7 +12,19 @@
 
   const reviewScreen = document.getElementById('review-screen');
   const reviewPhoto = document.getElementById('review-photo');
+  const reviewVideo = document.getElementById('review-video');
   const closeReviewButton = document.getElementById('close-review');
+  const reviewGalleryButton = document.getElementById('review-gallery');
+  const reviewSoundButton = document.getElementById('review-sound');
+  const reviewDeleteButton = document.getElementById('review-delete');
+
+  const galleryScreen = document.getElementById('gallery-screen');
+  const galleryGrid = document.getElementById('gallery-grid');
+  const galleryEmpty = document.getElementById('gallery-empty');
+  const galleryCount = document.getElementById('gallery-count');
+  const galleryBack = document.getElementById('gallery-back');
+
+  const recTime = document.getElementById('rec-time');
 
   const captureCanvas = document.getElementById('capture-canvas');
 
@@ -60,7 +72,18 @@
   let recentStyleIds = [];
   let currentPanelTab = 'prontos';
 
-  let currentPhotoUrl = null;
+  // Galeria da sessão: só em memória, mais recente primeiro.
+  const gallery = [];
+  let viewerItem = null;
+  let viewerFrom = 'camera';
+
+  let captureMode = 'foto';
+  let recorder = null;
+  let recordChunks = [];
+  let recordStart = 0;
+  let recordTimer = null;
+  let recordAudioStream = null;
+  let recordPoster = null;
 
   function findStyle(id) {
     return STYLES.find((s) => s.id === id);
@@ -239,12 +262,9 @@
   }
 
   function showPhoto(blob) {
-    discardPhoto();
-    currentPhotoUrl = URL.createObjectURL(blob);
-    reviewPhoto.src = currentPhotoUrl;
-    thumbnail.style.backgroundImage = `url(${currentPhotoUrl})`;
-    thumbnail.disabled = false;
-    openReview();
+    const item = { type: 'photo', url: URL.createObjectURL(blob) };
+    addToGallery(item);
+    openViewer(item, 'camera');
   }
 
   function triggerFlash() {
@@ -253,23 +273,219 @@
     setTimeout(() => flashOverlay.classList.remove('flashing'), 400);
   }
 
-  function openReview() {
+  // ---------- Galeria ----------
+
+  function addToGallery(item) {
+    gallery.unshift(item);
+    updateThumbnail();
+  }
+
+  function latestPhotoUrl() {
+    const photo = gallery.find((item) => item.type === 'photo');
+    return photo ? photo.url : null;
+  }
+
+  function itemPreviewUrl(item) {
+    return item.type === 'photo' ? item.url : item.posterUrl;
+  }
+
+  function updateThumbnail() {
+    const latest = gallery[0];
+    thumbnail.style.backgroundImage = latest && itemPreviewUrl(latest) ? `url(${itemPreviewUrl(latest)})` : '';
+    thumbnail.classList.remove('pop');
+    void thumbnail.offsetWidth;
+    if (latest) thumbnail.classList.add('pop');
+  }
+
+  function formatDuration(seconds) {
+    const s = Math.max(0, Math.round(seconds));
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }
+
+  function renderGallery() {
+    galleryGrid.innerHTML = '';
+    galleryEmpty.classList.toggle('hidden', gallery.length > 0);
+    const photos = gallery.filter((i) => i.type === 'photo').length;
+    const videos = gallery.length - photos;
+    const parts = [];
+    if (photos) parts.push(`${photos} ${photos === 1 ? 'foto' : 'fotos'}`);
+    if (videos) parts.push(`${videos} ${videos === 1 ? 'vídeo' : 'vídeos'}`);
+    galleryCount.textContent = parts.join(' · ');
+
+    gallery.forEach((item) => {
+      const tile = document.createElement('button');
+      tile.className = 'gallery-tile';
+      tile.setAttribute('aria-label', item.type === 'photo' ? 'Abrir foto' : 'Abrir vídeo');
+      const previewUrl = itemPreviewUrl(item);
+      if (previewUrl) tile.style.backgroundImage = `url(${previewUrl})`;
+      if (item.type === 'video') {
+        tile.innerHTML = `<span class="video-badge">▶ ${formatDuration(item.duration)}</span>`;
+      }
+      tile.addEventListener('click', () => openViewer(item, 'gallery'));
+      galleryGrid.appendChild(tile);
+    });
+  }
+
+  function openGallery() {
+    closeOptions();
+    closePanel();
+    renderGallery();
+    galleryScreen.classList.remove('hidden');
+  }
+
+  function closeGallery() {
+    galleryScreen.classList.add('hidden');
+  }
+
+  // ---------- Visualizador ----------
+
+  function openViewer(item, from) {
+    viewerItem = item;
+    viewerFrom = from;
+    const isVideo = item.type === 'video';
+    reviewPhoto.classList.toggle('hidden', isVideo);
+    reviewVideo.classList.toggle('hidden', !isVideo);
+    reviewSoundButton.classList.toggle('hidden', !isVideo);
+    if (isVideo) {
+      reviewPhoto.removeAttribute('src');
+      reviewVideo.src = item.url;
+      if (item.posterUrl) reviewVideo.poster = item.posterUrl;
+      setVideoSound(false);
+      const playing = reviewVideo.play();
+      if (playing && playing.catch) playing.catch(() => {});
+    } else {
+      reviewVideo.pause();
+      reviewVideo.removeAttribute('src');
+      reviewPhoto.src = item.url;
+    }
+    galleryScreen.classList.add('hidden');
     reviewScreen.classList.remove('hidden');
   }
 
-  function closeReview() {
+  function closeViewer() {
+    reviewVideo.pause();
     reviewScreen.classList.add('hidden');
-    discardPhoto();
+    viewerItem = null;
+    if (viewerFrom === 'gallery') openGallery();
   }
 
-  function discardPhoto() {
-    if (currentPhotoUrl) {
-      URL.revokeObjectURL(currentPhotoUrl);
-      currentPhotoUrl = null;
-    }
+  function setVideoSound(on) {
+    reviewVideo.muted = !on;
+    reviewSoundButton.setAttribute('aria-pressed', String(on));
+    reviewSoundButton.setAttribute('aria-label', on ? 'Desligar som' : 'Ligar som');
+  }
+
+  function deleteViewerItem() {
+    if (!viewerItem) return;
+    const index = gallery.indexOf(viewerItem);
+    if (index !== -1) gallery.splice(index, 1);
+    reviewVideo.pause();
+    reviewVideo.removeAttribute('src');
     reviewPhoto.removeAttribute('src');
-    thumbnail.style.backgroundImage = '';
-    thumbnail.disabled = true;
+    URL.revokeObjectURL(viewerItem.url);
+    updateThumbnail();
+    closeViewer();
+  }
+
+  // ---------- Vídeo ----------
+
+  function pickRecorderType() {
+    const types = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+    return types.find((t) => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || '';
+  }
+
+  function captureFrameUrl() {
+    const w = preview.videoWidth;
+    const h = preview.videoHeight;
+    if (!w || !h) return null;
+    const scale = Math.min(1, 480 / w);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(w * scale);
+    canvas.height = Math.round(h * scale);
+    const ctx = canvas.getContext('2d');
+    if (currentFacing === 'user') {
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+    }
+    ctx.drawImage(preview, 0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL('image/jpeg', 0.8);
+  }
+
+  function updateRecTime() {
+    recTime.textContent = formatDuration((Date.now() - recordStart) / 1000).padStart(5, '0');
+  }
+
+  async function startRecording() {
+    if (!currentStream || !window.MediaRecorder) {
+      recTime.textContent = 'Este navegador não grava vídeo';
+      cameraScreen.classList.add('rec-error');
+      setTimeout(() => cameraScreen.classList.remove('rec-error'), 2500);
+      return;
+    }
+
+    cameraScreen.classList.add('recording');
+    const tracks = currentStream.getVideoTracks();
+    try {
+      recordAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      tracks.push(...recordAudioStream.getAudioTracks());
+    } catch (e) {
+      recordAudioStream = null; // sem microfone: grava só a imagem
+    }
+
+    const type = pickRecorderType();
+    try {
+      recorder = new MediaRecorder(new MediaStream(tracks), type ? { mimeType: type } : undefined);
+    } catch (e) {
+      cameraScreen.classList.remove('recording');
+      stopAudio();
+      return;
+    }
+    recordChunks = [];
+    recordPoster = captureFrameUrl();
+    recorder.ondataavailable = (e) => {
+      if (e.data && e.data.size) recordChunks.push(e.data);
+    };
+    recorder.onstop = finishRecording;
+    recorder.start(250);
+    recordStart = Date.now();
+    updateRecTime();
+    recordTimer = setInterval(updateRecTime, 250);
+  }
+
+  function stopAudio() {
+    if (recordAudioStream) recordAudioStream.getTracks().forEach((t) => t.stop());
+    recordAudioStream = null;
+  }
+
+  function stopRecording() {
+    if (recorder && recorder.state !== 'inactive') recorder.stop();
+    clearInterval(recordTimer);
+    cameraScreen.classList.remove('recording');
+  }
+
+  function finishRecording() {
+    stopAudio();
+    const duration = (Date.now() - recordStart) / 1000;
+    const blob = new Blob(recordChunks, { type: (recorder && recorder.mimeType) || 'video/webm' });
+    recorder = null;
+    recordChunks = [];
+    if (!blob.size) return;
+    const item = { type: 'video', url: URL.createObjectURL(blob), posterUrl: recordPoster, duration };
+    addToGallery(item);
+    openViewer(item, 'camera');
+  }
+
+  function isRecording() {
+    return !!recorder && recorder.state === 'recording';
+  }
+
+  function onShutter() {
+    if (captureMode === 'video') {
+      if (isRecording()) stopRecording();
+      else startRecording();
+    } else {
+      takePhoto();
+    }
   }
 
   // ---------- Painel de estilos ----------
@@ -424,7 +640,8 @@
 
     const userMsg = document.createElement('div');
     userMsg.className = 'jo-msg-user';
-    const thumbHtml = currentPhotoUrl ? `<img class="jo-thumb" src="${currentPhotoUrl}" alt="Foto anexada" />` : '';
+    const lastPhoto = latestPhotoUrl();
+    const thumbHtml = lastPhoto ? `<img class="jo-thumb" src="${lastPhoto}" alt="Foto anexada" />` : '';
     userMsg.innerHTML = `${thumbHtml}<p class="jo-bubble"></p>`;
     userMsg.querySelector('.jo-bubble').textContent = text;
     joMessages.appendChild(userMsg);
@@ -497,8 +714,11 @@
 
   modeTabButtons.forEach((span) => {
     span.addEventListener('click', () => {
+      if (isRecording()) return;
       const mode = span.dataset.mode;
       setActiveMode(mode);
+      captureMode = mode === 'video' ? 'video' : 'foto';
+      cameraScreen.classList.toggle('mode-video', captureMode === 'video');
       if (mode === 'estilos') {
         openPanel();
       } else {
@@ -516,16 +736,32 @@
   // ---------- Eventos gerais ----------
 
   startButton.addEventListener('click', startCamera);
-  shutterButton.addEventListener('click', takePhoto);
+  shutterButton.addEventListener('click', onShutter);
   flashToggle.addEventListener('click', toggleFlash);
-  flipButton.addEventListener('click', flipCamera);
-  thumbnail.addEventListener('click', () => {
-    if (currentPhotoUrl) openReview();
+  flipButton.addEventListener('click', () => {
+    if (!isRecording()) flipCamera();
   });
-  closeReviewButton.addEventListener('click', closeReview);
+  thumbnail.addEventListener('click', () => {
+    if (!isRecording()) openGallery();
+  });
+  galleryBack.addEventListener('click', closeGallery);
+  closeReviewButton.addEventListener('click', closeViewer);
+  reviewGalleryButton.addEventListener('click', () => {
+    reviewVideo.pause();
+    reviewScreen.classList.add('hidden');
+    viewerItem = null;
+    openGallery();
+  });
+  reviewDeleteButton.addEventListener('click', deleteViewerItem);
+  reviewSoundButton.addEventListener('click', () => setVideoSound(reviewVideo.muted));
+  reviewVideo.addEventListener('click', () => {
+    if (reviewVideo.paused) reviewVideo.play();
+    else reviewVideo.pause();
+  });
 
   window.addEventListener('beforeunload', () => {
-    discardPhoto();
+    gallery.forEach((item) => URL.revokeObjectURL(item.url));
+    stopAudio();
     if (currentStream) currentStream.getTracks().forEach((track) => track.stop());
   });
 })();
