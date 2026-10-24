@@ -1,5 +1,6 @@
 // Apresentação do Jô: 5 telas antes da câmera. Ao terminar (ou pular),
-// some e liga a câmera pelo mesmo botão da tela de permissão.
+// some e deixa à mostra o aviso da câmera, que fica até a pessoa tocar
+// em "Ativar câmera".
 (function () {
   const root = document.getElementById('onboarding');
   if (!root) return;
@@ -10,7 +11,6 @@
   const nextButton = document.getElementById('ob-next');
   const backButton = document.getElementById('ob-back');
   const skipButtons = [document.getElementById('ob-skip'), document.getElementById('ob-skip-intro')];
-  const startCameraButton = document.getElementById('start-camera');
 
   const LABELS = ['Conhecer a câmera', 'Continuar', 'Continuar', 'Continuar', 'Criar Estilo'];
   let index = 0;
@@ -30,7 +30,6 @@
   function finish() {
     root.classList.add('leaving');
     setTimeout(() => root.remove(), 360);
-    startCameraButton.click();
   }
 
   // Arrastar com o dedo também troca de tela.
