@@ -89,21 +89,20 @@
   let recordChunks = [];
   let recordStart = 0;
   let recordTimer = null;
-  let recordAudioStream = null;
   let recordPoster = null;
 
   function findStyle(id) {
     return STYLES.find((s) => s.id === id);
   }
 
-  async function openStream(facing) {
+  async function openStream(facing, withAudio = false) {
     const stream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: { ideal: facing },
         width: { ideal: 7680 },
         height: { ideal: 4320 },
       },
-      audio: false,
+      audio: withAudio,
     });
 
     if (currentStream) {
@@ -454,31 +453,57 @@
     recTime.textContent = formatDuration((Date.now() - recordStart) / 1000).padStart(5, '0');
   }
 
+  function showRecMessage(text) {
+    recTime.textContent = text;
+    cameraScreen.classList.add('rec-error');
+    setTimeout(() => cameraScreen.classList.remove('rec-error'), 2500);
+  }
+
+  // Cria o gravador; se o formato escolhido não for aceito, tenta o padrão do navegador.
+  function createRecorder(stream) {
+    const type = pickRecorderType();
+    if (type) {
+      try {
+        return new MediaRecorder(stream, { mimeType: type });
+      } catch (e) {
+        // segue para o padrão
+      }
+    }
+    return new MediaRecorder(stream);
+  }
+
+  let recordStarting = false;
+
   async function startRecording() {
+    if (recordStarting) return;
     if (!currentStream || !window.MediaRecorder) {
-      recTime.textContent = 'Este navegador não grava vídeo';
-      cameraScreen.classList.add('rec-error');
-      setTimeout(() => cameraScreen.classList.remove('rec-error'), 2500);
+      showRecMessage('Este navegador não grava vídeo');
       return;
     }
 
+    recordStarting = true;
     cameraScreen.classList.add('recording');
-    const tracks = currentStream.getVideoTracks();
-    try {
-      recordAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      tracks.push(...recordAudioStream.getAudioTracks());
-    } catch (e) {
-      recordAudioStream = null; // sem microfone: grava só a imagem
+
+    // No iPhone, pedir o microfone separado pode travar a câmera já aberta.
+    // Por isso a câmera é reaberta já com o microfone junto.
+    if (!currentStream.getAudioTracks().length) {
+      try {
+        await openStream(currentFacing, true);
+      } catch (e) {
+        // sem microfone (ou recusado): grava só a imagem com a câmera atual
+      }
     }
 
-    const type = pickRecorderType();
     try {
-      recorder = new MediaRecorder(new MediaStream(tracks), type ? { mimeType: type } : undefined);
+      recorder = createRecorder(currentStream);
     } catch (e) {
+      recordStarting = false;
       cameraScreen.classList.remove('recording');
       stopAudio();
+      showRecMessage('Não foi possível gravar');
       return;
     }
+    recordStarting = false;
     recordChunks = [];
     recordPoster = captureFrameUrl();
     recorder.ondataavailable = (e) => {
@@ -492,9 +517,13 @@
     recordTimer = setInterval(updateRecTime, 250);
   }
 
+  // Desliga o microfone depois de gravar; a câmera continua aberta.
   function stopAudio() {
-    if (recordAudioStream) recordAudioStream.getTracks().forEach((t) => t.stop());
-    recordAudioStream = null;
+    if (!currentStream) return;
+    currentStream.getAudioTracks().forEach((t) => {
+      t.stop();
+      currentStream.removeTrack(t);
+    });
   }
 
   function stopRecording() {
@@ -506,13 +535,41 @@
   function finishRecording() {
     stopAudio();
     const duration = (Date.now() - recordStart) / 1000;
-    const blob = new Blob(recordChunks, { type: (recorder && recorder.mimeType) || 'video/webm' });
+    const type = (recorder && recorder.mimeType) || pickRecorderType() || 'video/mp4';
+    const blob = new Blob(recordChunks, { type: type.split(';')[0] });
     recorder = null;
     recordChunks = [];
-    if (!blob.size) return;
+    if (!blob.size) {
+      showRecMessage('Não foi possível salvar o vídeo');
+      return;
+    }
     const item = { type: 'video', url: URL.createObjectURL(blob), posterUrl: recordPoster, duration };
     addToGallery(item);
+    if (!item.posterUrl) makePosterFromVideo(item);
     openViewer(item, 'camera');
+  }
+
+  // Se não deu para tirar a capa na hora de gravar, tira do próprio vídeo.
+  function makePosterFromVideo(item) {
+    const probe = document.createElement('video');
+    probe.muted = true;
+    probe.playsInline = true;
+    probe.preload = 'auto';
+    probe.src = item.url;
+    probe.addEventListener('loadeddata', () => {
+      try {
+        const scale = Math.min(1, 480 / (probe.videoWidth || 480));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round((probe.videoWidth || 480) * scale);
+        canvas.height = Math.round((probe.videoHeight || 640) * scale);
+        canvas.getContext('2d').drawImage(probe, 0, 0, canvas.width, canvas.height);
+        item.posterUrl = canvas.toDataURL('image/jpeg', 0.8);
+        updateThumbnail();
+        if (!galleryScreen.classList.contains('hidden')) renderGallery();
+      } catch (e) {
+        // sem capa: o quadradinho fica com o fundo padrão
+      }
+    }, { once: true });
   }
 
   function isRecording() {
