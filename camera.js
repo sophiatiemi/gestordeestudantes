@@ -1,6 +1,5 @@
 (() => {
   const preview = document.getElementById('preview');
-  const previewBg = document.getElementById('preview-bg');
   const permissionOverlay = document.getElementById('permission-overlay');
   const permissionText = document.getElementById('permission-text');
   const startButton = document.getElementById('start-camera');
@@ -114,7 +113,6 @@
     currentStream = stream;
     currentFacing = facing;
     preview.srcObject = stream;
-    previewBg.srcObject = stream;
 
     currentTrack = stream.getVideoTracks()[0];
 
@@ -138,15 +136,20 @@
     await applyZoom(zoomLevel);
   }
 
-  // Sem zoom de hardware: acima de 1 amplia a imagem; abaixo de 1 (0,5) mostra
-  // o quadro inteiro do sensor, sem o corte das laterais, como uma grande-angular.
+  // Sem zoom de hardware (ex.: câmera frontal) não dá para abrir mais que o
+  // sensor. Então o 0,5 mostra a imagem toda, preenchendo a tela, e o 1× fica
+  // um pouco aproximado, como a frontal do iPhone faz.
+  const SOFTWARE_BASE = 1.2;
+
+  function previewScale() {
+    if (zoomIsHardware) return 1;
+    if (zoomLevel < 1) return 1;
+    return zoomLevel * SOFTWARE_BASE;
+  }
+
   function updatePreviewTransform() {
     const mirror = currentFacing === 'user' ? -1 : 1;
-    const software = !zoomIsHardware;
-    const cssScale = software && zoomLevel > 1 ? zoomLevel : 1;
-    cameraScreen.classList.toggle('wide-fallback', software && zoomLevel < 1);
-    preview.style.transform = `scaleX(${mirror}) scale(${cssScale})`;
-    previewBg.style.transform = `scaleX(${mirror}) scale(1.15)`;
+    preview.style.transform = `scaleX(${mirror}) scale(${previewScale()})`;
   }
 
   async function applyZoom(value) {
@@ -200,8 +203,7 @@
   async function takePhoto() {
     const useStyle = activeStyleId !== 'padrao';
     const useMirror = currentFacing === 'user';
-    // O 0,5 simulado já é o quadro inteiro: só o zoom acima de 1 precisa de recorte.
-    const useCssZoom = !zoomIsHardware && zoomLevel > 1;
+    const useCssZoom = previewScale() !== 1;
     let torchApplied = false;
 
     if (flashOn) {
@@ -248,27 +250,43 @@
     }
   }
 
+  // Tira a foto exatamente como aparece na tela: mesmo formato da tela,
+  // mesmo corte e mesmo zoom da prévia.
   function captureFromCanvas(mirror, useStyle, useCssZoom) {
-    const width = preview.videoWidth;
-    const height = preview.videoHeight;
-    if (!width || !height) return;
+    const videoW = preview.videoWidth;
+    const videoH = preview.videoHeight;
+    if (!videoW || !videoH) return;
 
-    captureCanvas.width = width;
-    captureCanvas.height = height;
+    const screenW = cameraScreen.clientWidth || window.innerWidth;
+    const screenH = cameraScreen.clientHeight || window.innerHeight;
+    const screenRatio = screenW / screenH;
+    const scale = useCssZoom ? previewScale() : 1;
+
+    // Pedaço do vídeo que a prévia mostra (object-fit: cover + zoom).
+    let srcW = videoW;
+    let srcH = videoW / screenRatio;
+    if (srcH > videoH) {
+      srcH = videoH;
+      srcW = videoH * screenRatio;
+    }
+    srcW /= scale;
+    srcH /= scale;
+    const srcX = (videoW - srcW) / 2;
+    const srcY = (videoH - srcH) / 2;
+
+    const outW = Math.round(srcW);
+    const outH = Math.round(srcH);
+    captureCanvas.width = outW;
+    captureCanvas.height = outH;
     const ctx = captureCanvas.getContext('2d');
 
     ctx.save();
     if (mirror) {
-      ctx.translate(width, 0);
+      ctx.translate(outW, 0);
       ctx.scale(-1, 1);
     }
-    if (useCssZoom) {
-      ctx.translate(width / 2, height / 2);
-      ctx.scale(zoomLevel, zoomLevel);
-      ctx.translate(-width / 2, -height / 2);
-    }
     ctx.filter = useStyle ? findStyle(activeStyleId).filter : 'none';
-    ctx.drawImage(preview, 0, 0, width, height);
+    ctx.drawImage(preview, srcX, srcY, srcW, srcH, 0, 0, outW, outH);
     ctx.restore();
 
     captureCanvas.toBlob((blob) => {
@@ -547,9 +565,7 @@
 
   function selectStyle(id) {
     activeStyleId = id;
-    const filter = findStyle(id).filter;
-    preview.style.filter = filter;
-    previewBg.style.filter = `${filter === 'none' ? '' : filter} blur(28px) brightness(0.55)`.trim();
+    preview.style.filter = findStyle(id).filter;
     recentStyleIds = [id, ...recentStyleIds.filter((existing) => existing !== id)].slice(0, 5);
     renderStrip(currentPanelTab);
   }
