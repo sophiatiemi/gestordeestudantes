@@ -10,7 +10,12 @@
   flex-direction: column;
   background: #fff;
   color: var(--ob-ink);
-  transition: opacity 350ms ease, transform 350ms ease;
+  transition: opacity 350ms ease, transform 350ms ease, background-color 300ms ease;
+}
+
+/* Primeira tela com o fundo cinza claro da referência */
+#onboarding.on-intro {
+  background: #efefef;
 }
 
 #onboarding.leaving {
@@ -131,7 +136,7 @@
 /* ---------- 1. Conheça o Jô ---------- */
 
 .ob-intro {
-  padding-top: calc(var(--safe-top) * 0 + 8px);
+  overflow: hidden;
 }
 
 .ob-intro-logo {
@@ -152,89 +157,31 @@
   color: var(--ob-muted);
 }
 
-.ob-phone-stage {
+/* A foto tem o mesmo fundo cinza da tela, então as bordas somem */
+.ob-hand-stage {
   flex: 1;
-  min-height: 260px;
+  min-height: 0;
+  margin: 8px -24px 0;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  position: relative;
 }
 
-.ob-phone-stage::before {
-  content: '';
-  position: absolute;
-  width: 260px;
-  height: 260px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(var(--jo-blue-rgb), 0.16), transparent 68%);
-}
-
-.ob-phone {
-  position: relative;
-  width: 132px;
-  height: 270px;
-  border-radius: 26px;
-  background: linear-gradient(150deg, #e4dcf5 0%, #c3b4e4 45%, #a796d4 100%);
-  box-shadow:
-    inset 0 0 0 2px rgba(255, 255, 255, 0.55),
-    inset -6px 0 14px rgba(70, 50, 120, 0.18),
-    0 30px 50px rgba(60, 50, 110, 0.28);
-  transform: rotate(-9deg);
-  animation: ob-float 4s ease-in-out infinite;
-}
-
-.ob-phone-cam {
-  position: absolute;
-  top: 14px;
-  left: 12px;
-  width: 90px;
-  height: 40px;
-  border-radius: 14px;
-  background: linear-gradient(160deg, #d8cff0, #b9aae0);
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6), 0 3px 8px rgba(60, 40, 110, 0.2);
-}
-
-.ob-phone-cam .lens {
-  position: absolute;
-  top: 8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 38%, #4a5070 0 18%, #12131c 30% 62%, #2c2f40 64%);
-  box-shadow: 0 0 0 2.5px #e9e4f6;
-}
-
-.ob-phone-cam .l1 { left: 6px; }
-.ob-phone-cam .l2 { left: 34px; }
-.ob-phone-cam .l3 { left: 62px; }
-
-.ob-phone-flash {
-  position: absolute;
-  right: -16px;
-  top: 15px;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #fff6d8;
-  box-shadow: 0 0 0 1.5px #e9e4f6;
-}
-
-.ob-phone-brand {
-  position: absolute;
-  bottom: 22px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: rgba(255, 255, 255, 0.75);
-}
-
-@keyframes ob-float {
-  0%, 100% { transform: rotate(-9deg) translateY(0); }
-  50% { transform: rotate(-7deg) translateY(-10px); }
+.ob-hand {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  -webkit-mask-image:
+    linear-gradient(to bottom, #000 80%, transparent),
+    linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to bottom, #000 80%, transparent),
+    linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
 }
 
 /* ---------- Rodapé ---------- */
@@ -685,11 +632,6 @@
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ob-phone {
-    animation: none;
-  }
-}
 
 /* A caixa de texto fica no pé da maquete do chat: esmaece menos */
 .ob-mock.m-chat {
