@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=36" />
-  <link rel="stylesheet" href="onboarding.css?v=36" />
-  <link rel="stylesheet" href="community.css?v=36" />
+  <link rel="stylesheet" href="style.css?v=37" />
+  <link rel="stylesheet" href="onboarding.css?v=37" />
+  <link rel="stylesheet" href="community.css?v=37" />
 </head>
 <body>
 
@@ -26,7 +26,7 @@
         <h1 class="ob-title">Conheça o <em>Jô</em>,</h1>
         <p class="ob-intro-sub">seu fotógrafo inteligente.</p>
         <div class="ob-hand-stage">
-          <img class="ob-hand" src="onboarding/mao-celular.png?v=36" alt="Mão segurando o celular Jovi" />
+          <img class="ob-hand" src="onboarding/mao-celular.png?v=37" alt="Mão segurando o celular Jovi" />
         </div>
       </section>
 
@@ -110,6 +110,8 @@
   </div>
 
   <main id="camera-screen">
+    <!-- Fundo desfocado: só aparece no 0,5 simulado, para não sobrar borda preta -->
+    <video id="preview-bg" autoplay playsinline muted aria-hidden="true"></video>
     <video id="preview" autoplay playsinline muted></video>
 
     <div id="flash-overlay"></div>
@@ -436,7 +438,7 @@
 
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=36"></script>
-  <script src="onboarding.js?v=36"></script>
+  <script src="camera.js?v=37"></script>
+  <script src="onboarding.js?v=37"></script>
 </body>
 </html>

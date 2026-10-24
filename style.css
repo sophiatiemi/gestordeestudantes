@@ -44,12 +44,26 @@ button {
   background: #000;
 }
 
-#preview {
+#preview,
+#preview-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+#preview-bg {
+  display: none;
+  filter: blur(28px) brightness(0.55);
+}
+
+#camera-screen.wide-fallback #preview-bg {
+  display: block;
+}
+
+#camera-screen.wide-fallback #preview {
+  object-fit: contain;
 }
 
 #flash-overlay {
@@ -667,10 +681,11 @@ button {
   justify-content: center;
 }
 
+/* Foto inteira, como na galeria do celular (o 0,5 não fica cortado) */
 #review-photo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 #review-screen .review-back {

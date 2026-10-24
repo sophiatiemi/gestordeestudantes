@@ -1,5 +1,6 @@
 (() => {
   const preview = document.getElementById('preview');
+  const previewBg = document.getElementById('preview-bg');
   const permissionOverlay = document.getElementById('permission-overlay');
   const permissionText = document.getElementById('permission-text');
   const startButton = document.getElementById('start-camera');
@@ -113,6 +114,7 @@
     currentStream = stream;
     currentFacing = facing;
     preview.srcObject = stream;
+    previewBg.srcObject = stream;
 
     currentTrack = stream.getVideoTracks()[0];
 
@@ -136,10 +138,15 @@
     await applyZoom(zoomLevel);
   }
 
+  // Sem zoom de hardware: acima de 1 amplia a imagem; abaixo de 1 (0,5) mostra
+  // o quadro inteiro do sensor, sem o corte das laterais, como uma grande-angular.
   function updatePreviewTransform() {
     const mirror = currentFacing === 'user' ? -1 : 1;
-    const cssScale = zoomIsHardware ? 1 : zoomLevel;
+    const software = !zoomIsHardware;
+    const cssScale = software && zoomLevel > 1 ? zoomLevel : 1;
+    cameraScreen.classList.toggle('wide-fallback', software && zoomLevel < 1);
     preview.style.transform = `scaleX(${mirror}) scale(${cssScale})`;
+    previewBg.style.transform = `scaleX(${mirror}) scale(1.15)`;
   }
 
   async function applyZoom(value) {
@@ -193,7 +200,8 @@
   async function takePhoto() {
     const useStyle = activeStyleId !== 'padrao';
     const useMirror = currentFacing === 'user';
-    const useCssZoom = !zoomIsHardware && zoomLevel !== 1;
+    // O 0,5 simulado já é o quadro inteiro: só o zoom acima de 1 precisa de recorte.
+    const useCssZoom = !zoomIsHardware && zoomLevel > 1;
     let torchApplied = false;
 
     if (flashOn) {
@@ -539,7 +547,9 @@
 
   function selectStyle(id) {
     activeStyleId = id;
-    preview.style.filter = findStyle(id).filter;
+    const filter = findStyle(id).filter;
+    preview.style.filter = filter;
+    previewBg.style.filter = `${filter === 'none' ? '' : filter} blur(28px) brightness(0.55)`.trim();
     recentStyleIds = [id, ...recentStyleIds.filter((existing) => existing !== id)].slice(0, 5);
     renderStrip(currentPanelTab);
   }
