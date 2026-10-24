@@ -590,10 +590,15 @@
 
 /* ---------- 5. Maquete de estilos ---------- */
 
-.m-styles {
-  max-width: none;
-  margin-right: -24px;
+/* Começa alinhado ao texto e vaza só pela direita, como na referência */
+.ob-mock.m-styles {
+  align-self: stretch;
   width: auto;
+  max-width: none;
+  margin: 22px -24px 0 0;
+  height: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .m-styles-label {
@@ -611,15 +616,11 @@
 
 .m-styles-row span {
   position: relative;
-  flex: 0 0 150px;
-  height: 140px;
-  border-radius: 18px;
+  flex: 0 0 54vw;
+  max-width: 230px;
+  height: min(58vw, 250px);
+  border-radius: 22px;
   background: center/cover no-repeat;
-}
-
-.m-styles-row.small span {
-  flex-basis: 150px;
-  height: 120px;
 }
 
 .m-styles-row i {
@@ -627,7 +628,7 @@
   left: 12px;
   bottom: 10px;
   font-style: normal;
-  font-size: 15px;
+  font-size: 17px;
   color: #fff;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
