@@ -4,9 +4,114 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=29" />
+  <link rel="stylesheet" href="style.css?v=30" />
+  <link rel="stylesheet" href="onboarding.css?v=30" />
 </head>
 <body>
+
+  <!-- Apresentação: aparece antes da câmera e explica o Jô -->
+  <div id="onboarding" role="dialog" aria-label="Apresentação do Jô">
+    <header class="ob-header">
+      <button id="ob-back" class="ob-back" aria-label="Voltar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7" /></svg>
+      </button>
+      <button id="ob-skip" class="ob-skip">Pular</button>
+    </header>
+
+    <div id="ob-track" class="ob-track">
+      <!-- 1. Conheça o Jô -->
+      <section class="ob-slide ob-intro">
+        <img class="ob-intro-logo" src="media/jo-loading-dark.png" alt="Jô" />
+        <h1 class="ob-title">Conheça o <em>Jô</em>,</h1>
+        <p class="ob-intro-sub">seu fotógrafo inteligente.</p>
+        <div class="ob-phone-stage" aria-hidden="true">
+          <div class="ob-phone">
+            <div class="ob-phone-cam">
+              <span class="lens l1"></span><span class="lens l2"></span><span class="lens l3"></span><span class="ob-phone-flash"></span>
+            </div>
+            <span class="ob-phone-brand">jovi</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Chat -->
+      <section class="ob-slide">
+        <h1 class="ob-title">Você pensa na foto.<br />O <em>Jô</em> pensa no resto.</h1>
+        <p class="ob-text">Conte o que você quer fotografar e o Jô cria um estilo de fotografia para você, ajustando a câmera para cada situação.</p>
+        <div class="ob-mock m-chat" aria-hidden="true">
+          <div class="m-chat-top"><span class="m-menu">☰</span><span class="m-chev">⌄</span><span class="m-test">Testar</span></div>
+          <img class="m-chat-photo" src="styles/festa.jpg" alt="" />
+          <p class="m-chat-bubble">Jô, quero tirar uma foto em um show de pop seguindo exatamente a estética da referência.</p>
+          <div class="m-chat-status"><img src="media/jo-loading-dark.png" alt="" /><span>Capturando…</span></div>
+          <div class="m-chat-input"><span>+</span><span class="m-ph">Qual a sua ideia?</span><span class="m-mic"></span></div>
+        </div>
+      </section>
+
+      <!-- 3. Estilo pronto -->
+      <section class="ob-slide">
+        <h1 class="ob-title">Seu <em>Estilo</em> está pronto.</h1>
+        <p class="ob-text">O Jô entende o que você quer fotografar e ajusta a câmera do seu celular para você.</p>
+        <p class="ob-text ob-text-strong">A foto é capturada pela sua câmera, não gerada por IA.</p>
+        <div class="ob-mock m-cam" aria-hidden="true">
+          <div class="m-cam-photo"></div>
+          <div class="m-cam-ui">
+            <div class="m-cam-tabs"><b>Estilos prontos</b><span>Favoritos</span><span>Recentes</span></div>
+            <div class="m-cam-strip">
+              <span style="background-image:url(styles/revista.jpg)"><i>Revista</i></span>
+              <span class="on" style="background-image:url(styles/festa.jpg)"><i>Festa</i></span>
+              <span style="background-image:url(styles/cidade.jpg)"><i>Cidade</i></span>
+              <span style="background-image:url(styles/comida.jpg)"><i>Comida</i></span>
+            </div>
+            <div class="m-cam-modes"><span>Vídeo</span><span>Foto</span><b>Estilos</b><span>Mais</span></div>
+            <div class="m-cam-bottom"><span class="m-cam-thumb"></span><span class="m-cam-shutter"></span><span class="m-cam-flip"></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Comunidade -->
+      <section class="ob-slide">
+        <h1 class="ob-title">Explore a <em>Comunidade</em>.</h1>
+        <p class="ob-text">Crie e experimente novos estilos. Compartilhe suas criações e teste os estilos de outras pessoas diretamente na sua câmera.</p>
+        <div class="ob-mock m-com" aria-hidden="true">
+          <div class="m-com-top"><span class="m-menu">☰</span><b>Comunidade</b><span class="m-search"></span></div>
+          <div class="m-com-post">
+            <div class="m-com-user"><span class="m-avatar">GT</span><div><b>Gustavo Tietre</b><small>Estilo · Show ao vivo</small></div><span class="m-test">Testar</span></div>
+            <div class="m-com-images"><span style="background-image:url(styles/festa.jpg)"></span><span style="background-image:url(styles/revista.jpg)"></span></div>
+            <div class="m-com-stats"><span>❤️ 250</span><span>⬇ 342</span><span>➤ 121</span></div>
+            <p class="m-com-caption"><b>Gustavo Tietre</b> Criei este estilo para fotografar shows à noite… <span>mais</span></p>
+            <small class="m-com-when">Há 2 dias</small>
+          </div>
+          <div class="m-com-user m-com-next"><span class="m-avatar b">BA</span><div><b>Beatriz Araujo</b><small>Estilo · Cidade</small></div><span class="m-test">Testar</span></div>
+        </div>
+      </section>
+
+      <!-- 5. Estilos -->
+      <section class="ob-slide">
+        <h1 class="ob-title ob-title-big">Crie e teste os <em>Estilos</em></h1>
+        <p class="ob-text">Crie seus próprios estilos ou experimente os que a comunidade criou.</p>
+        <div class="ob-mock m-styles" aria-hidden="true">
+          <p class="m-styles-label">Favoritos da comunidade</p>
+          <div class="m-styles-row">
+            <span style="background-image:url(styles/cidade.jpg)"><i>Cidade</i></span>
+            <span style="background-image:url(styles/comida.jpg)"><i>Comida</i></span>
+            <span style="background-image:url(styles/revista.jpg)"><i>Revista</i></span>
+          </div>
+          <p class="m-styles-label">Estilos prontos</p>
+          <div class="m-styles-row small">
+            <span style="background-image:url(styles/festa.jpg)"><i>Festa</i></span>
+            <span style="background-image:url(styles/revista.jpg)"><i>Revista</i></span>
+            <span style="background-image:url(styles/comida.jpg)"><i>Comida</i></span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="ob-footer">
+      <div class="ob-dots" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <button id="ob-next" class="ob-cta">Conhecer a câmera</button>
+      <button id="ob-skip-intro" class="ob-link">Pular apresentação</button>
+    </footer>
+  </div>
 
   <main id="camera-screen">
     <video id="preview" autoplay playsinline muted></video>
@@ -287,6 +392,7 @@
 
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=29"></script>
+  <script src="camera.js?v=30"></script>
+  <script src="onboarding.js?v=30"></script>
 </body>
 </html>

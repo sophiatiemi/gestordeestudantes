@@ -1,0 +1,699 @@
+/* ---------- Apresentação do Jô (antes da câmera) ---------- */
+
+#onboarding {
+  --ob-ink: #1b1b22;
+  --ob-muted: #4a4d63;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--ob-ink);
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+#onboarding.leaving {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+.ob-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--safe-top) + 8px) 16px 4px;
+  height: calc(var(--safe-top) + 52px);
+  transition: opacity 200ms ease;
+}
+
+#onboarding.on-intro .ob-header {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ob-back {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+}
+
+.ob-back svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ob-skip {
+  font-size: 15px;
+  color: var(--ob-muted);
+  padding: 8px 4px;
+}
+
+/* Trilho com as telas: arrasta para os lados no celular */
+.ob-track {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.ob-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ob-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 24px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.ob-title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  color: var(--ob-ink);
+}
+
+.ob-title em {
+  font-style: normal;
+  color: var(--jo-blue);
+}
+
+.ob-title-big {
+  font-size: 40px;
+  line-height: 1.02;
+  letter-spacing: -1px;
+}
+
+.ob-text {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--ob-muted);
+}
+
+.ob-text-strong {
+  margin-top: 6px;
+  color: var(--ob-ink);
+  font-weight: 500;
+}
+
+/* Maquetes: cortadas embaixo com um esmaecido, como na referência */
+.ob-mock {
+  flex-shrink: 0;
+  position: relative;
+  margin: 22px auto 0;
+  width: 100%;
+  max-width: 320px;
+  height: clamp(250px, 44dvh, 400px);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+
+/* ---------- 1. Conheça o Jô ---------- */
+
+.ob-intro {
+  padding-top: calc(var(--safe-top) * 0 + 8px);
+}
+
+.ob-intro-logo {
+  width: 92px;
+  height: 47px;
+  object-fit: contain;
+  object-position: left;
+  margin: 0 0 18px -4px;
+}
+
+.ob-intro .ob-title {
+  font-size: 36px;
+}
+
+.ob-intro-sub {
+  margin: 4px 0 0;
+  font-size: 20px;
+  color: var(--ob-muted);
+}
+
+.ob-phone-stage {
+  flex: 1;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.ob-phone-stage::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--jo-blue-rgb), 0.16), transparent 68%);
+}
+
+.ob-phone {
+  position: relative;
+  width: 132px;
+  height: 270px;
+  border-radius: 26px;
+  background: linear-gradient(150deg, #e4dcf5 0%, #c3b4e4 45%, #a796d4 100%);
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.55),
+    inset -6px 0 14px rgba(70, 50, 120, 0.18),
+    0 30px 50px rgba(60, 50, 110, 0.28);
+  transform: rotate(-9deg);
+  animation: ob-float 4s ease-in-out infinite;
+}
+
+.ob-phone-cam {
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  width: 90px;
+  height: 40px;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #d8cff0, #b9aae0);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6), 0 3px 8px rgba(60, 40, 110, 0.2);
+}
+
+.ob-phone-cam .lens {
+  position: absolute;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #4a5070 0 18%, #12131c 30% 62%, #2c2f40 64%);
+  box-shadow: 0 0 0 2.5px #e9e4f6;
+}
+
+.ob-phone-cam .l1 { left: 6px; }
+.ob-phone-cam .l2 { left: 34px; }
+.ob-phone-cam .l3 { left: 62px; }
+
+.ob-phone-flash {
+  position: absolute;
+  right: -16px;
+  top: 15px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff6d8;
+  box-shadow: 0 0 0 1.5px #e9e4f6;
+}
+
+.ob-phone-brand {
+  position: absolute;
+  bottom: 22px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@keyframes ob-float {
+  0%, 100% { transform: rotate(-9deg) translateY(0); }
+  50% { transform: rotate(-7deg) translateY(-10px); }
+}
+
+/* ---------- Rodapé ---------- */
+
+.ob-footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 24px calc(var(--safe-bottom) + 14px);
+}
+
+.ob-dots {
+  display: flex;
+  gap: 7px;
+  height: 7px;
+}
+
+#onboarding.on-intro .ob-dots {
+  visibility: hidden;
+}
+
+.ob-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #cfd3e3;
+  transition: width 250ms ease, background 250ms ease;
+}
+
+.ob-dots span.on {
+  width: 18px;
+  background: var(--jo-blue);
+}
+
+.ob-cta {
+  width: 100%;
+  max-width: 360px;
+  height: 54px;
+  border-radius: 999px;
+  background: var(--jo-blue);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 8px 22px rgba(var(--jo-blue-rgb), 0.32);
+  transition: transform 120ms ease;
+}
+
+.ob-cta:active {
+  transform: scale(0.97);
+}
+
+.ob-link {
+  font-size: 14px;
+  color: var(--ob-muted);
+  height: 20px;
+}
+
+#onboarding:not(.on-intro) .ob-link {
+  display: none;
+}
+
+/* ---------- Peças comuns das maquetes ---------- */
+
+.ob-mock .m-test {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--jo-blue);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ob-mock .m-menu {
+  font-size: 15px;
+  color: var(--ob-muted);
+}
+
+/* ---------- 2. Maquete do chat ---------- */
+
+.m-chat {
+  border-radius: 26px 26px 0 0;
+  background: #f6f7fb;
+  border: 1px solid #e6e8f2;
+  border-bottom: none;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.m-chat-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.m-chat-top .m-chev {
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translateX(-50%);
+  color: var(--ob-ink);
+}
+
+.m-chat-photo {
+  align-self: flex-end;
+  width: 76px;
+  height: 84px;
+  margin-top: 16px;
+  border-radius: 12px;
+  object-fit: cover;
+  filter: contrast(1.3) saturate(1.25) brightness(0.82);
+}
+
+.m-chat-bubble {
+  align-self: flex-end;
+  max-width: 76%;
+  margin: 10px 0 0;
+  padding: 8px 11px;
+  border-radius: 13px 13px 4px 13px;
+  background: #e3e8ff;
+  color: var(--jo-blue);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.m-chat-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-top: 18px;
+  font-size: 11px;
+  color: var(--ob-muted);
+}
+
+.m-chat-status img {
+  width: 54px;
+  height: 28px;
+  object-fit: contain;
+  object-position: left;
+}
+
+.m-chat-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e3e6f2;
+  font-size: 12px;
+  color: var(--ob-muted);
+}
+
+.m-chat-input .m-ph {
+  flex: 1;
+  color: #8a90b0;
+}
+
+.m-mic {
+  width: 8px;
+  height: 13px;
+  border-radius: 5px;
+  border: 1.6px solid #8a90b0;
+}
+
+/* ---------- 3. Maquete da câmera com estilo ---------- */
+
+.m-cam {
+  border-radius: 26px;
+  background: #000;
+  -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent);
+  mask-image: linear-gradient(to bottom, #000 88%, transparent);
+}
+
+.m-cam-photo {
+  position: absolute;
+  inset: 0;
+  background: url(styles/festa.jpg) center/cover no-repeat;
+  filter: contrast(1.3) saturate(1.25) brightness(0.82) sepia(0.35) hue-rotate(-12deg);
+}
+
+.m-cam-ui {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 40px 12px 16px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.75) 30%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.m-cam-tabs {
+  display: flex;
+  gap: 12px;
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.m-cam-tabs b,
+.m-cam-modes b {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.m-cam-strip {
+  display: flex;
+  gap: 7px;
+}
+
+.m-cam-strip span {
+  position: relative;
+  flex: 1;
+  height: 62px;
+  border-radius: 10px;
+  background: center/cover no-repeat;
+}
+
+.m-cam-strip span.on {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.m-cam-strip i {
+  position: absolute;
+  left: 5px;
+  bottom: 4px;
+  font-style: normal;
+  font-size: 9px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.m-cam-modes {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.m-cam-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.m-cam-thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: url(styles/cidade.jpg) center/cover;
+}
+
+.m-cam-shutter {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px #000, 0 0 0 5px rgba(255, 255, 255, 0.85);
+}
+
+.m-cam-flip {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* ---------- 4. Maquete da comunidade ---------- */
+
+.m-com {
+  border-radius: 26px 26px 0 0;
+  background: #fff;
+  border: 1px solid #e6e8f2;
+  border-bottom: none;
+  box-shadow: 0 10px 30px rgba(20, 30, 80, 0.08);
+  padding: 14px;
+}
+
+.m-com-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.m-search {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f0f2f8;
+  position: relative;
+}
+
+.m-search::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.6px solid var(--ob-muted);
+}
+
+.m-com-post {
+  margin-top: 14px;
+}
+
+.m-com-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.m-com-user > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.m-com-user small {
+  font-size: 9.5px;
+  color: #8a90b0;
+}
+
+.m-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #2747e8, #8a6cf0);
+}
+
+.m-avatar.b {
+  background: linear-gradient(135deg, #f0806c, #e8b04a);
+}
+
+.m-com-images {
+  display: flex;
+  gap: 6px;
+  margin: 10px -14px 0 0;
+}
+
+.m-com-images span {
+  flex: 0 0 62%;
+  height: 150px;
+  border-radius: 14px;
+  background: center/cover no-repeat;
+}
+
+.m-com-images span:first-child {
+  filter: grayscale(1) contrast(1.1);
+}
+
+.m-com-stats {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: var(--ob-ink);
+}
+
+.m-com-caption {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  line-height: 1.4;
+  color: var(--ob-muted);
+}
+
+.m-com-caption b {
+  color: var(--ob-ink);
+}
+
+.m-com-caption span,
+.m-com-when {
+  color: #8a90b0;
+}
+
+.m-com-when {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+}
+
+.m-com-next {
+  margin-top: 16px;
+  opacity: 0.55;
+}
+
+/* ---------- 5. Maquete de estilos ---------- */
+
+.m-styles {
+  max-width: none;
+  margin-right: -24px;
+  width: auto;
+}
+
+.m-styles-label {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ob-ink);
+}
+
+.m-styles-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.m-styles-row span {
+  position: relative;
+  flex: 0 0 150px;
+  height: 140px;
+  border-radius: 18px;
+  background: center/cover no-repeat;
+}
+
+.m-styles-row.small span {
+  flex-basis: 150px;
+  height: 120px;
+}
+
+.m-styles-row i {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  font-style: normal;
+  font-size: 15px;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ob-phone {
+    animation: none;
+  }
+}
+
+/* A caixa de texto fica no pé da maquete do chat: esmaece menos */
+.ob-mock.m-chat {
+  height: clamp(250px, 40dvh, 360px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 92%, transparent);
+  mask-image: linear-gradient(to bottom, #000 92%, transparent);
+}
