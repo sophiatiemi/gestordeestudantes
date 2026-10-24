@@ -157,7 +157,7 @@
   color: var(--ob-muted);
 }
 
-/* A foto tem o mesmo fundo cinza da tela, então as bordas somem */
+/* Foto com fundo transparente sobre o cinza da tela */
 .ob-hand-stage {
   flex: 1;
   min-height: 0;
@@ -174,14 +174,9 @@
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  -webkit-mask-image:
-    linear-gradient(to bottom, #000 80%, transparent),
-    linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  -webkit-mask-composite: source-in;
-  mask-image:
-    linear-gradient(to bottom, #000 80%, transparent),
-    linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
-  mask-composite: intersect;
+  /* a blusa some aos poucos no pé da tela, como na referência */
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
 }
 
 /* ---------- Rodapé ---------- */
