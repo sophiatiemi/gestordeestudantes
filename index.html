@@ -4,8 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>Câmera Jovi</title>
-  <link rel="stylesheet" href="style.css?v=34" />
-  <link rel="stylesheet" href="onboarding.css?v=34" />
+  <link rel="stylesheet" href="style.css?v=35" />
+  <link rel="stylesheet" href="onboarding.css?v=35" />
+  <link rel="stylesheet" href="community.css?v=35" />
 </head>
 <body>
 
@@ -25,7 +26,7 @@
         <h1 class="ob-title">Conheça o <em>Jô</em>,</h1>
         <p class="ob-intro-sub">seu fotógrafo inteligente.</p>
         <div class="ob-hand-stage">
-          <img class="ob-hand" src="onboarding/mao-celular.png?v=34" alt="Mão segurando o celular Jovi" />
+          <img class="ob-hand" src="onboarding/mao-celular.png?v=35" alt="Mão segurando o celular Jovi" />
         </div>
       </section>
 
@@ -250,7 +251,7 @@
     <!-- Tela da Jô: sobe por cima da câmera ao tocar na logo da Jô lá em cima -->
     <div id="jo-panel">
       <div class="jo-topbar">
-        <button class="jo-icon-btn" aria-label="Menu" tabindex="-1">☰</button>
+        <button id="jo-menu" class="jo-icon-btn" aria-label="Abrir comunidade">☰</button>
         <button id="jo-collapse" class="jo-collapse" aria-label="Voltar para a câmera">⌄</button>
         <div class="jo-right-cluster">
           <button id="jo-test" class="jo-test-btn" aria-label="Testar na câmera">
@@ -385,9 +386,57 @@
     <p class="gallery-note">Fica salvo só enquanto esta página estiver aberta.</p>
   </div>
 
+
+  <!-- Comunidade: abre pelo ☰ do chat da Jô -->
+  <div id="community-screen" class="hidden">
+    <header class="com-header">
+      <button id="community-back" class="com-circle" aria-label="Voltar para o chat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 7h14M5 12h10M5 17h14"/></svg>
+      </button>
+      <div class="com-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 3v18M16 3v18M4 8h4M4 12h4M4 16h4M16 8h4M16 12h4M16 16h4"/></svg>
+        <h1>Comunidade</h1>
+      </div>
+      <button class="com-circle" aria-label="Buscar" tabindex="-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/></svg>
+      </button>
+    </header>
+    <div class="com-feed">
+      <article class="com-post">
+        <div class="com-user">
+          <span class="com-avatar b">BA</span>
+          <div class="com-user-text"><b>Beatriz Araujo</b><small>JOVI V70</small></div>
+          <button class="com-test" data-style="festa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h2l1.5-2h9L18 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" /><circle cx="12" cy="13.5" r="3.2" /></svg>Testar</button>
+        </div>
+        <div class="com-carousel"><span style="background-image:url(styles/festa.jpg)"></span><span style="background-image:url(styles/cidade.jpg)"></span><span style="background-image:url(styles/comida.jpg)"></span></div>
+        <div class="com-dots"><i></i><i></i><i></i></div>
+        <div class="com-stats">
+          <span><svg viewBox="0 0 24 24" fill="#e5383b"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.1 5.2 3 1.6-1.9 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>250</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>342</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="m21 3-11 10"/></svg>121</span>
+        </div>
+        <p class="com-caption"><b>Beatriz Araujo</b> Meu estilo para festas à noite: cores quentes e muito contraste. Testa aí! <span>mais</span></p>
+        <small class="com-when">Há 2 dias</small>
+      </article>
+      <article class="com-post">
+        <div class="com-user">
+          <span class="com-avatar g">GT</span>
+          <div class="com-user-text"><b>Gustavo Tietre</b><small>JOVI X300 Ultra</small></div>
+          <button class="com-test" data-style="revista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h2l1.5-2h9L18 8h2a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" /><circle cx="12" cy="13.5" r="3.2" /></svg>Testar</button>
+        </div>
+        <div class="com-carousel"><span style="background-image:url(styles/festa.jpg)" class=bw></span><span style="background-image:url(styles/revista.jpg)" class=bw></span><span style="background-image:url(styles/cidade.jpg)" class=bw></span></div>
+        <div class="com-dots"><i></i><i></i><i></i></div>
+        <div class="com-stats">
+          <span><svg viewBox="0 0 24 24" fill="#e5383b"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.1 5.2 3 1.6-1.9 3.1-3 5.2-3 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/></svg>250</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/></svg>342</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 3 3 10.5l7 2.5 2.5 7z"/><path d="m21 3-11 10"/></svg>121</span>
+        </div>
+        <p class="com-caption"><b>Gustavo Tietre</b> Criei este estilo para fotografar shows em preto e branco. <span>mais</span></p>
+        <small class="com-when">Há 2 dias</small>
+      </article>
+      <button class="com-more" type="button">Ver mais</button>
+    </div>
+  </div>
+
   <canvas id="capture-canvas" class="hidden"></canvas>
 
-  <script src="camera.js?v=34"></script>
-  <script src="onboarding.js?v=34"></script>
+  <script src="camera.js?v=35"></script>
+  <script src="onboarding.js?v=35"></script>
 </body>
 </html>

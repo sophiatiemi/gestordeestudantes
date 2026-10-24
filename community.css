@@ -1,0 +1,231 @@
+/* ---------- Comunidade (abre pelo ☰ do chat da Jô) ---------- */
+
+#community-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: #1b1b22;
+  animation: com-in 260ms ease both;
+}
+
+@keyframes com-in {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+.com-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(var(--safe-top) + 12px) 16px 10px;
+}
+
+.com-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f2f7;
+  color: #4a4d63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.com-circle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.com-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.com-title svg {
+  width: 20px;
+  height: 20px;
+}
+
+.com-title h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.com-feed {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 0 calc(var(--safe-bottom) + 30px);
+}
+
+.com-post {
+  padding: 0 0 26px 18px;
+}
+
+.com-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 18px;
+}
+
+.com-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.com-avatar.b {
+  background: linear-gradient(135deg, #f0806c, #c8325c);
+}
+
+.com-avatar.g {
+  background: linear-gradient(135deg, #444, #9a9a9a);
+}
+
+.com-user-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-size: 15px;
+}
+
+.com-user-text small {
+  font-size: 11px;
+  color: #8a90b0;
+}
+
+.com-test {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 8px 11px;
+  border-radius: 999px;
+  background: var(--jo-blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(var(--jo-blue-rgb), 0.3);
+}
+
+.com-test svg {
+  width: 16px;
+  height: 16px;
+}
+
+.com-test:active {
+  transform: scale(0.96);
+}
+
+.com-carousel {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  padding-right: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.com-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.com-carousel span {
+  flex: 0 0 56%;
+  height: 210px;
+  border-radius: 18px;
+  background: #eee center/cover no-repeat;
+  scroll-snap-align: start;
+}
+
+.com-carousel span.bw {
+  filter: grayscale(1) contrast(1.1);
+}
+
+.com-dots {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+  padding-right: 18px;
+}
+
+.com-dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d3d6e3;
+}
+
+.com-dots i.on {
+  background: var(--jo-blue);
+}
+
+.com-stats {
+  display: flex;
+  gap: 22px;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+.com-stats span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.com-stats svg {
+  width: 21px;
+  height: 21px;
+}
+
+.com-caption {
+  margin: 10px 0 0;
+  padding-right: 18px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: #4a4d63;
+}
+
+.com-caption b {
+  color: #1b1b22;
+}
+
+.com-caption span,
+.com-when {
+  color: #8a90b0;
+}
+
+.com-when {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+/* "Ver mais" fica só de enfeite: não carrega nada */
+.com-more {
+  display: block;
+  margin: 0 auto;
+  padding: 11px 28px;
+  border-radius: 999px;
+  border: 1px solid #d5dcff;
+  background: #eef1ff;
+  color: var(--jo-blue);
+  font-size: 14px;
+  font-weight: 600;
+}

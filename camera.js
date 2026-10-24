@@ -853,6 +853,44 @@
   joSendButton.addEventListener('click', handleJoSend);
 
   joCollapse.addEventListener('click', closeJoPanel);
+
+  // ---------- Comunidade (abre pelo ☰ do chat) ----------
+
+  const communityScreen = document.getElementById('community-screen');
+
+  document.getElementById('jo-menu').addEventListener('click', () => {
+    joInput.blur();
+    closeAttachSheet();
+    communityScreen.classList.remove('hidden');
+    communityScreen.querySelector('.com-feed').scrollTop = 0;
+  });
+
+  document.getElementById('community-back').addEventListener('click', () => {
+    communityScreen.classList.add('hidden');
+  });
+
+  // Testar: aplica o estilo do perfil e volta direto para a câmera.
+  communityScreen.querySelectorAll('.com-test').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      selectStyle(btn.dataset.style);
+      communityScreen.classList.add('hidden');
+      closeJoPanel();
+    });
+  });
+
+  // Pontinhos do carrossel acompanham o arrastar.
+  communityScreen.querySelectorAll('.com-post').forEach((post) => {
+    const carousel = post.querySelector('.com-carousel');
+    const dots = Array.from(post.querySelectorAll('.com-dots i'));
+    const update = () => {
+      const tile = carousel.firstElementChild;
+      const step = tile ? tile.getBoundingClientRect().width + 6 : 1;
+      const i = Math.min(dots.length - 1, Math.round(carousel.scrollLeft / step));
+      dots.forEach((d, k) => d.classList.toggle('on', k === i));
+    };
+    carousel.addEventListener('scroll', update, { passive: true });
+    update();
+  });
   joTest.addEventListener('click', closeJoPanel);
 
   joOpenButton.addEventListener('click', () => {
